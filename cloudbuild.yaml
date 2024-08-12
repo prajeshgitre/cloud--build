@@ -17,4 +17,4 @@ images:
   - 'us-central1-docker.pkg.dev/prajesh/my-repo/my-app:$COMMIT_SHA'
 
 options:
-  defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
+  logging: NONE
