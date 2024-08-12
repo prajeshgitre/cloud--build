@@ -1,5 +1,4 @@
 steps:
-  # Step 1: Build the Docker image
   - name: 'gcr.io/cloud-builders/docker'
     args: [
       'build', 
@@ -8,7 +7,6 @@ steps:
       '.'
     ]
 
-  # Step 2: Push the Docker image to Google Cloud Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
     args: [
       'push', 
@@ -16,4 +14,7 @@ steps:
     ]
 
 images:
-  - 'us-central1-docker.pkg.dev/prajes/my-repo/my-app:$COMMIT_SHA'
+  - 'us-central1-docker.pkg.dev/prajesh/my-repo/my-app:$COMMIT_SHA'
+
+options:
+  defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
