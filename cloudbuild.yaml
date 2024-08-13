@@ -3,14 +3,14 @@ steps:
     args: [
       'build', 
       '-t', 
-      'us-central1-docker.pkg.dev/prajesh/my-repo/my-app-2:$COMMIT_SHA', 
+      'us-central1-docker.pkg.dev/prajesh/my-repo/my-app-1:$COMMIT_SHA', 
       '.'
     ]
 
   - name: 'gcr.io/cloud-builders/docker'
     args: [
       'push', 
-      'us-central1-docker.pkg.dev/prajesh/my-repo/my-app-2:$COMMIT_SHA'
+      'us-central1-docker.pkg.dev/prajesh/my-repo/my-app-1:$COMMIT_SHA'
     ]
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -18,9 +18,9 @@ steps:
     args: [
       'run', 
       'deploy', 
-      'my-app',  # The name of your Cloud Run service
+      'my-app-1',  # The name of your Cloud Run service
       '--image', 
-      'us-central1-docker.pkg.dev/prajesh/my-repo/my-app-2:$COMMIT_SHA', 
+      'us-central1-docker.pkg.dev/prajesh/my-repo/my-app-1:$COMMIT_SHA', 
       '--platform',
       'managed',
       '--region',
@@ -29,6 +29,6 @@ steps:
     ]
 
 images:
-  - 'us-central1-docker.pkg.dev/prajesh/my-repo/my-app-2:$COMMIT_SHA'
+  - 'us-central1-docker.pkg.dev/prajesh/my-repo/my-app-1:$COMMIT_SHA'
 
 logsBucket: 'gs://cloud-build-01'
