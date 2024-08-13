@@ -13,6 +13,21 @@ steps:
       'us-central1-docker.pkg.dev/prajesh/my-repo/my-app:$COMMIT_SHA'
     ]
 
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'gcloud'
+    args: [
+      'run', 
+      'deploy', 
+      'my-app',  # The name of your Cloud Run service
+      '--image', 
+      'us-central1-docker.pkg.dev/prajesh/my-repo/my-app:$COMMIT_SHA', 
+      '--platform',
+      'managed',
+      '--region',
+      'us-central1',  # The region where you want to deploy
+      '--allow-unauthenticated'  # If you want to allow public access
+    ]
+
 images:
   - 'us-central1-docker.pkg.dev/prajesh/my-repo/my-app:$COMMIT_SHA'
 
