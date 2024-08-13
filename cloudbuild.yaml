@@ -29,6 +29,6 @@ steps:
     ]
 
 images:
-  - 'us-central1-docker.pkg.dev/prajesh/my-repo/my-app:$COMMIT_SHA'
+  - 'us-central1-docker.pkg.dev/prajesh/my-repo/my-app-2:$COMMIT_SHA'
 
 logsBucket: 'gs://cloud-build-01'
