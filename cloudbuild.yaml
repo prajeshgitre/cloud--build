@@ -1,4 +1,5 @@
 steps:
+  # Step 1: Build the Docker image
   - name: 'gcr.io/cloud-builders/docker'
     args: [
       'build', 
@@ -7,12 +8,30 @@ steps:
       '.'
     ]
 
+  # Step 2: Push the Docker image to Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
     args: [
       'push', 
       'us-central1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-02/my-app-1:$COMMIT_SHA'
     ]
 
+  # Step 3: Create a Cloud Deploy release
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'gcloud'
+    args: [
+      'deploy', 
+      'releases', 
+      'create', 
+      'my-app-release-$COMMIT_SHA',  # Release name
+      '--delivery-pipeline', 
+      'my-app-pipeline', 
+      '--region', 
+      'asia-south1',
+      '--images',
+      'us-central1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-02/my-app-1:$COMMIT_SHA'
+    ]
+
+  # Step 4: Deploy the image to Cloud Run using Cloud Deploy
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: 'gcloud'
     args: [
@@ -26,18 +45,6 @@ steps:
       '--region',
       'asia-south1',
       '--allow-unauthenticated'
-    ]
-
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    entrypoint: 'gcloud'
-    args: [
-      'deploy', 
-      'releases', 
-      'create', 
-      '--delivery-pipeline', 
-      'my-app-pipeline', 
-      '--region', 
-      'asia-south1'
     ]
 
 images:
