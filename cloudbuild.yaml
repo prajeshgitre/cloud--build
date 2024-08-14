@@ -3,14 +3,14 @@ steps:
     args: [
       'build', 
       '-t', 
-      'asia-south1-docker.pkg.dev/prajesh/my-app2/my-app2:$COMMIT_SHA', 
+      'us-central1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-02/my-app-1:$COMMIT_SHA', 
       '.'
     ]
 
   - name: 'gcr.io/cloud-builders/docker'
     args: [
       'push', 
-      'asia-south1-docker.pkg.dev/prajesh/my-app2/my-app2:$COMMIT_SHA'
+      'us-central1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-02/my-app-1:$COMMIT_SHA'
     ]
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -18,18 +18,20 @@ steps:
     args: [
       'run', 
       'deploy', 
-      'my-app-1',  
+      'my-app-1-us',  
       '--image', 
-      'asia-south1-docker.pkg.dev/prajesh/my-app2/my-app2:$COMMIT_SHA', 
+      'us-central1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-02/my-app-1:$COMMIT_SHA', 
       '--platform',
       'managed',
       '--region',
       'asia-south1',
       '--allow-unauthenticated',
+      '--ingress', 
+      'internal'
     ]
 
 images:
-  - 'asia-south1-docker.pkg.dev/prajesh/my-app2/my-app2:$COMMIT_SHA'
+  - 'us-central1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-02/my-app-1:$COMMIT_SHA'
 
 logsBucket: 'gs://cloud-build-03'
 
