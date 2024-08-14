@@ -23,7 +23,7 @@ steps:
       'my-app-pipeline',  
       '--region', 
       'us-central1',
-      '--image', 
+      '--images', 
       'us-central1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-02/my-app-1:$COMMIT_SHA'
     ]
 
