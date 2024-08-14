@@ -28,7 +28,7 @@ steps:
       '--region', 
       'asia-south1',
       '--images',
-      'us-central1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-02/my-app-1:$COMMIT_SHA'
+      'my-app-1=us-central1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-02/my-app-1:$COMMIT_SHA'
     ]
 
   # Step 4: Deploy the image to Cloud Run using Cloud Deploy
