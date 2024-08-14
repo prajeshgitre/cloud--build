@@ -4,7 +4,7 @@ steps:
     args: [
       'build', 
       '-t', 
-      'us-central1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-02/my-app-1:$COMMIT_SHA', 
+      'asia-south1-docker.pkg.dev/prajesh/my-app2/my-app-1:$COMMIT_SHA', 
       '.'
     ]
 
@@ -12,7 +12,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: [
       'push', 
-      'us-central1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-02/my-app-1:$COMMIT_SHA'
+      'asia-south1-docker.pkg.dev/prajesh/my-app2/my-app-1:$COMMIT_SHA'
     ]
 
   # Step 3: Create a Cloud Deploy release
@@ -28,7 +28,7 @@ steps:
       '--region', 
       'asia-south1',
       '--images',
-      'my-app-1=us-central1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-02/my-app-1:$COMMIT_SHA'
+      'my-app-1=us-central1-docker.pkg.dev/prajesh/my-app2/my-app-1:$COMMIT_SHA'
     ]
 
   # Step 4: Deploy the image to Cloud Run using Cloud Deploy
@@ -39,7 +39,7 @@ steps:
       'deploy', 
       'my-app-1',  
       '--image', 
-      'us-central1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-02/my-app-1:$COMMIT_SHA', 
+      'asia-south1-docker.pkg.dev/prajesh/my-app2/my-app-1:$COMMIT_SHA', 
       '--platform',
       'managed',
       '--region',
@@ -48,6 +48,6 @@ steps:
     ]
 
 images:
-  - 'us-central1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-02/my-app-1:$COMMIT_SHA'
+  - 'asia-south1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-02/my-app-1:$COMMIT_SHA'
 
-logsBucket: 'gs://cloud-build-02'
+logsBucket: 'gs://cloud-build-03'
