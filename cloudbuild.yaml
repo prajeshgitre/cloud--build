@@ -33,5 +33,5 @@ steps:
 images:
   - 'asia-south1-docker.pkg.dev/prajesh/my-app2/my-app-01:$COMMIT_SHA'
 
-logsBucket: 'gs://cloud-build-02'
+logsBucket: 'gs://cloud-build-03'
 
