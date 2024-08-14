@@ -16,15 +16,18 @@ steps:
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: 'gcloud'
     args: [
+      'run', 
       'deploy', 
-      'releases', 
-      'create', 
-      '--delivery-pipeline', 
-      'my-app-pipeline',  
-      '--region', 
+      'my-app-1-us',  
+      '--image', 
+      'us-central1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-02/my-app-1:$COMMIT_SHA', 
+      '--platform',
+      'managed',
+      '--region',
       'us-central1',
-      '--images', 
-      'us-central1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-02/my-app-1:$COMMIT_SHA'
+      '--allow-unauthenticated',
+     '--ingress', 
+      'internal-and-cloud-load-balancing'
     ]
 
 images:
