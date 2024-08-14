@@ -24,7 +24,7 @@ steps:
       '--platform',
       'managed',
       '--region',
-      'asia-south1',
+      'us-central1',
       '--allow-unauthenticated',
      '--ingress', 
       'internal-and-cloud-load-balancing'
