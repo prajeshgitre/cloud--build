@@ -10,7 +10,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: [
       'push', 
-      'asia-south1-docker.pkg.dev/prajesh/my-app-01/my-app-02:$COMMIT_SHA'
+      'asia-south1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-01/my-app-02:$COMMIT_SHA'
     ]
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
