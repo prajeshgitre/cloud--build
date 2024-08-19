@@ -26,7 +26,7 @@ steps:
       '--delivery-pipeline', 
       'my-run-demo-app-1', 
       '--region', 
-      'us-central1',
+      'asia-south1',
       '--images',
       'my-app-1=asia-south1-docker.pkg.dev/prajesh/my-app2/my-app-1:$COMMIT_SHA'
     ]
