@@ -1,0 +1,9 @@
+apiVersion: deploy.cloud.google.com/v1
+kind: DeliveryPipeline
+metadata:
+  name: my-run-demo-app-1
+description: main application pipeline
+serialPipeline:
+  stages:
+  - targetId: run-qsdev
+    profiles: [dev]
