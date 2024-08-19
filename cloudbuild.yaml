@@ -8,7 +8,7 @@ steps:
       '.'
     ]
 
-  # Step 2: Push the Docker image to Artifact Registry
+  # Step 2: Push the Docker image to Artifact Registr
   - name: 'gcr.io/cloud-builders/docker'
     args: [
       'push', 
