@@ -1,12 +1,20 @@
+
 apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
-  name: my-app-service
-  namespace: default
+  name: dev
 spec:
   template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/maxScale: "1"
     spec:
       containers:
-        - image: asia-south1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-01/my-app-1:$COMMIT_SHA
-          ports:
-            - containerPort: 8080
+      - name: myapp
+        image: asia-south1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-01/my-app-1:$COMMIT_SHA
+        ports:
+        - containerPort:  80
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 128Mi
