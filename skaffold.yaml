@@ -20,4 +20,4 @@ profiles:
   - name: dev #should match with cloudeploy profiles
     manifests:
       rawYaml:
-        - cloud-deploy-run-yamls/myapp-dev.yaml
+        - cloud-run-service.yaml
