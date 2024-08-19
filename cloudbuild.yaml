@@ -22,16 +22,16 @@ steps:
       'deploy', 
       'releases', 
       'create', 
-      'my-app-release-$COMMIT_SHA',  # Release name
+      'my-release-$SHORT_SHA',  # Shorten the release name
       '--delivery-pipeline', 
       'my-app-pipeline', 
       '--region', 
       'asia-south1',
       '--images',
-      'my-app-1=us-central1-docker.pkg.dev/prajesh/my-app2/my-app-1:$COMMIT_SHA'
+      'my-app-1=asia-south1-docker.pkg.dev/prajesh/my-app2/my-app-1:$COMMIT_SHA'
     ]
 
-  # Step 4: Deploy the image to CloudRun using Cloud Deploy
+  # Step 4: Deploy the image to Cloud Run using Cloud Deploy
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: 'gcloud'
     args: [
@@ -48,6 +48,6 @@ steps:
     ]
 
 images:
-  - 'asia-south1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-02/my-app-1:$COMMIT_SHA'
+  - 'asia-south1-docker.pkg.dev/prajesh/my-app2/my-app-1:$COMMIT_SHA'
 
 logsBucket: 'gs://cloud-build-03'
