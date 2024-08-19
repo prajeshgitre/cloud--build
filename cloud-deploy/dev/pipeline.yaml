@@ -5,5 +5,9 @@ metadata:
 description: main application pipeline
 serialPipeline:
   stages:
-  - targetId: run-qsdev
-    profiles: [dev]
+    - targetId: dev
+      profiles:
+        - dev
+    - targetId: prod
+      profiles:
+        - prod
