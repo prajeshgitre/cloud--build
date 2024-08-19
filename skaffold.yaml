@@ -1,12 +1,23 @@
-apiVersion: skaffold/v2beta30
+# apiVersion: skaffold/v2beta30
+# kind: Config
+# metadata:
+#   name: my-app
+# build:
+#   artifacts:
+#     - image: asia-south1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-01/my-app-1
+# deploy:
+#   cloudrun:
+#     region: asia-south1
+#     project: infra-samruddh-bharat-poc-01
+#     service: my-app-service
+apiVersion: skaffold/v3alpha1
 kind: Config
 metadata:
-  name: my-app
-build:
-  artifacts:
-    - image: asia-south1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-01/my-app-1
+  name: myapp
 deploy:
-  cloudrun:
-    region: asia-south1
-    project: infra-samruddh-bharat-poc-01
-    service: my-app-service
+  cloudrun: {}
+profiles:
+  - name: dev #should match with cloudeploy profiles
+    manifests:
+      rawYaml:
+        - cloud-deploy-run-yamls/myapp-dev.yaml
