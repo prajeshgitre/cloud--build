@@ -4,7 +4,7 @@ metadata:
   name: my-app-1
 build:
   artifacts:
-  - image: asia-south1-docker.pkg.dev/prajesh/my-app2/my-app-1
+  - image: asia-south1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app2/my-app-1
     context: .
     docker:
       dockerfile: Dockerfile
@@ -14,7 +14,7 @@ build:
 deploy:
   cloudrun:
     region: asia-south1
-    projectId: prajesh
+    projectId: infra-samruddh-bharat-poc-01
     rollout:
       retryOnUpdateConflict: true
     service:
@@ -24,7 +24,7 @@ profiles:
   - name: cloudrun
     deploy:
       cloudrun:
-        projectId: prajesh
+        projectId: infra-samruddh-bharat-poc-01
         region: asia-south1
         service:
           name: my-app-1
