@@ -24,9 +24,9 @@ steps:
       'create', 
       'my-release-$SHORT_SHA',  # Shorten the release name
       '--delivery-pipeline', 
-      'my-app-pipeline', 
+      'my-run-demo-app-1', 
       '--region', 
-      'asia-south1',
+      'us-central1',
       '--images',
       'my-app-1=asia-south1-docker.pkg.dev/prajesh/my-app2/my-app-1:$COMMIT_SHA'
     ]
