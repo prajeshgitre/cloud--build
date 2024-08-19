@@ -4,7 +4,7 @@ metadata:
   name: my-app
 build:
   artifacts:
-  - image: asia-south1-docker.pkg.dev/prajesh/my-app2/my-app-1
+  - image: asia-south1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-01/my-app-1
 deploy:
   kubectl:
     manifests:
