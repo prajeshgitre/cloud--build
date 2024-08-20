@@ -27,6 +27,7 @@ steps:
         gcloud deploy releases create my-app-1-$SHORT_SHA \
                             --delivery-pipeline=my-run-demo-app-1 \
                             --skaffold-file=skaffold.yaml
+      - '--allow-unauthenticated'                      
 
   # Step 4: Describe the release
   - name: 'google/cloud-sdk:latest'
