@@ -4,7 +4,7 @@ steps:
     args: [
       'build', 
       '-t', 
-      'asia-south1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-01/my-app-1:$COMMIT_SHA', 
+      'asia-south1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-01/my-app-1:b2d77c9f715cb76f10f41ac3f234ab060778d640', 
       '.'
     ]
 
@@ -12,7 +12,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: [
       'push', 
-      'asia-south1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-01/my-app-1:$COMMIT_SHA'
+      'asia-south1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-01/my-app-1:b2d77c9f715cb76f10f41ac3f234ab060778d640'
     ]
 
   # Step 3: Trigger Cloud Deploy
@@ -38,7 +38,7 @@ steps:
       'deploy', 
       'my-app-1',  
       '--image', 
-      'asia-south1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-01/my-app-1:$COMMIT_SHA', 
+      'asia-south1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-01/my-app-1:b2d77c9f715cb76f10f41ac3f234ab060778d640', 
       '--platform',
       'managed',
       '--region',
@@ -47,6 +47,6 @@ steps:
     ]
 
 images:
-  - 'asia-south1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-01/my-app-1:$COMMIT_SHA'
+  - 'asia-south1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-01/my-app-1:b2d77c9f715cb76f10f41ac3f234ab060778d640'
 
 logsBucket: 'gs://cloud-build-02'
