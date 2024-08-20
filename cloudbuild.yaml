@@ -1,48 +1,44 @@
 steps:
   # Step 1: Build the Docker image
   - name: 'gcr.io/cloud-builders/docker'
-    args: [
-      'build', 
-      '-t', 
-      'asia-south1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-01/my-app-1:latest', 
-      '.'
-    ]
+    args:
+      - 'build'
+      - '-t'
+      - 'asia-south1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-01/my-app-1:latest'
+      - '.'
 
   # Step 2: Push the Docker image to Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
-    args: [
-      'push', 
-      'asia-south1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-01/my-app-1:latest'
-    ]
+    args:
+      - 'push'
+      - 'asia-south1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-01/my-app-1:latest'
 
   # Step 3: Trigger Cloud Deploy
   - name: 'google/cloud-sdk:latest'
     id: Trigger Cloud Deploy
     entrypoint: 'sh'
     args:
-    - -xe
-    - -c
-    - |
-      gcloud config set deploy/region asia-south1
-      gcloud deploy apply --file cloud-deploy/dev/pipeline.yaml
-      gcloud deploy apply --file cloud-deploy/dev/target.yaml
-      gcloud deploy releases create my-app-1-$SHORT_SHA \
-                          --delivery-pipeline=my-run-demo-app-1 \
-                          --skaffold-file=skaffold.yaml
+      - -xe
+      - -c
+      - |
+        gcloud config set deploy/region asia-south1
+        gcloud deploy apply --file cloud-deploy/dev/pipeline.yaml
+        gcloud deploy apply --file cloud-deploy/dev/target.yaml
+        gcloud deploy releases create my-app-1-$SHORT_SHA \
+                            --delivery-pipeline=my-run-demo-app-1 \
+                            --skaffold-file=skaffold.yaml
 
   # Step 4: Describe the release
   - name: 'google/cloud-sdk:latest'
     id: Describe Cloud Deploy Release
     entrypoint: 'gcloud'
     args:
-    [
-      'deploy', 
-      'releases', 
-      'describe', 
-      'my-app-1-$SHORT_SHA', 
-      '--delivery-pipeline=my-run-demo-app-1',
-      '--region=asia-south1'
-    ]
+      - 'deploy'
+      - 'releases'
+      - 'describe'
+      - 'my-app-1-$SHORT_SHA'
+      - '--delivery-pipeline=my-run-demo-app-1'
+      - '--region=asia-south1'
 
 images:
   - 'asia-south1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-01/my-app-1:latest'
