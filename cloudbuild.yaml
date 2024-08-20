@@ -26,7 +26,7 @@ steps:
       gcloud config set deploy/region asia-south1
       gcloud deploy apply --file cloud-deploy/dev/pipeline.yaml
       gcloud deploy apply --file cloud-deploy/dev/target.yaml
-      gcloud deploy releases create my-app-1-${SHORT_SHA} \
+      gcloud deploy releases create my-app-1-$SHORT_SHA \
                           --delivery-pipeline=my-run-demo-app-1 \
                           --skaffold-file=skaffold.yaml
 
