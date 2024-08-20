@@ -30,21 +30,19 @@ steps:
                           --delivery-pipeline=my-run-demo-app-1 \
                           --skaffold-file=skaffold.yaml
 
-  # Step 4: Deploy the image to Cloud Run using Cloud Deploy
-  # - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-  #   entrypoint: 'gcloud'
-  #   args: [
-  #     'run', 
-  #     'deploy', 
-  #     'my-app-1',  
-  #     '--image', 
-  #     'asia-south1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-01/my-app-1:latest', 
-  #     '--platform',
-  #     'managed',
-  #     '--region',
-  #     'asia-south1',
-  #     '--allow-unauthenticated'
-  #   ]
+  # Step 4: Describe the release
+  - name: 'google/cloud-sdk:latest'
+    id: Describe Cloud Deploy Release
+    entrypoint: 'gcloud'
+    args:
+    [
+      'deploy', 
+      'releases', 
+      'describe', 
+      'my-app-1-$SHORT_SHA', 
+      '--delivery-pipeline=my-run-demo-app-1',
+      '--region=asia-south1'
+    ]
 
 images:
   - 'asia-south1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-01/my-app-1:latest'
