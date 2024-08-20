@@ -31,20 +31,20 @@ steps:
                           --skaffold-file=skaffold.yaml
 
   # Step 4: Deploy the image to Cloud Run using Cloud Deploy
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    entrypoint: 'gcloud'
-    args: [
-      'run', 
-      'deploy', 
-      'my-app-1',  
-      '--image', 
-      'asia-south1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-01/my-app-1:latest', 
-      '--platform',
-      'managed',
-      '--region',
-      'asia-south1',
-      '--allow-unauthenticated'
-    ]
+  # - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  #   entrypoint: 'gcloud'
+  #   args: [
+  #     'run', 
+  #     'deploy', 
+  #     'my-app-1',  
+  #     '--image', 
+  #     'asia-south1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-01/my-app-1:latest', 
+  #     '--platform',
+  #     'managed',
+  #     '--region',
+  #     'asia-south1',
+  #     '--allow-unauthenticated'
+  #   ]
 
 images:
   - 'asia-south1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-01/my-app-1:latest'
