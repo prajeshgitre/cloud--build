@@ -12,7 +12,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def main():
-    return_resp = {"message": "hello world-02"}
+    return_resp = {"Intentional failure for testing"}
     return jsonify(return_resp)
 
 
