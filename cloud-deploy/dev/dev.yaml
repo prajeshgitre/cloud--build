@@ -10,7 +10,7 @@ spec:
     spec:
       containers:
       - name: myapp
-        image: asia-south1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-01/my-app-1:b2d77c9f715cb76f10f41ac3f234ab060778d640
+        image: asia-south1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-01/my-app-1:b2d77c9f715cb76f10f41ac3f234ab060778d64
         ports:
         - containerPort:  80
         resources:
