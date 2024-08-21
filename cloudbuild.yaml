@@ -28,9 +28,9 @@ steps:
       - 'asia-south1'
       - '--allow-unauthenticated'
 
-  # Step 4: Check the deployed service status
-  - name: 'curlimages/curl'  # Use curl image to make HTTP requests
-    entrypoint: 'sh'
+  # Step 4: Check the deployed service status and rollback if necessary
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'bash'
     args:
       - '-c'
       - |
@@ -47,7 +47,7 @@ steps:
           last_release=$(gcloud deploy releases list \
             --delivery-pipeline=my-run-demo-app-1 \
             --region=asia-south1 \
-            --format="yaml(name)" | awk -F'/' '{print $NF}' | sed -n '4p')
+            --format="value(name)" | sed -n '2p')
 
           # Rollback to the last release
           gcloud deploy releases rollback $last_release --to-target=dev
