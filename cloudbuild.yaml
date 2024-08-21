@@ -48,9 +48,10 @@ steps:
       - -c
       - |
         set -e
-        if ! gcloud deploy releases describe my-app-1-$SHORT_SHA --delivery-pipeline=my-run-demo-app-1 --region=asia-south1 | grep "SUCCESS"; then
+        DEPLOYMENT_STATUS=$(gcloud deploy releases describe my-app-1-$SHORT_SHA --delivery-pipeline=my-run-demo-app-1 --region=asia-south1 --format='value(status)')
+        if [ "$DEPLOYMENT_STATUS" != "SUCCESS" ]; then
           echo "Deployment failed, rolling back to the previous release..."
-          PREV_RELEASE=$(gcloud deploy releases list --delivery-pipeline=my-run-demo-app-1 --region=asia-south1 --sort-by=~createTime --limit=2 | tail -n 1 | awk '{print $1}')
+          PREV_RELEASE=$(gcloud deploy releases list --delivery-pipeline=my-run-demo-app-1 --region=asia-south1 --sort-by=~createTime --limit=2 --format='value(name)' | tail -n 1)
           gcloud deploy releases create $PREV_RELEASE --delivery-pipeline=my-run-demo-app-1 --region=asia-south1 --skaffold-file=skaffold.yaml
         else
           echo "Deployment succeeded, no rollback needed."
