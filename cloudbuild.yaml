@@ -27,7 +27,6 @@ steps:
         gcloud deploy releases create my-app-1-$SHORT_SHA \
                             --delivery-pipeline=my-run-demo-app-1 \
                             --skaffold-file=skaffold.yaml
-                          
 
   # Step 4: Describe the release
   - name: 'google/cloud-sdk:latest'
@@ -40,6 +39,22 @@ steps:
       - 'my-app-1-$SHORT_SHA'
       - '--delivery-pipeline=my-run-demo-app-1'
       - '--region=asia-south1'
+
+  # Step 5: Rollback if deployment fails
+  - name: 'google/cloud-sdk:latest'
+    id: Rollback on Failure
+    entrypoint: 'sh'
+    args:
+      - -c
+      - |
+        set -e
+        if ! gcloud deploy releases describe my-app-1-$SHORT_SHA --delivery-pipeline=my-run-demo-app-1 --region=asia-south1 | grep "SUCCESS"; then
+          echo "Deployment failed, rolling back to the previous release..."
+          PREV_RELEASE=$(gcloud deploy releases list --delivery-pipeline=my-run-demo-app-1 --region=asia-south1 --sort-by=~createTime --limit=2 | tail -n 1 | awk '{print $1}')
+          gcloud deploy releases create $PREV_RELEASE --delivery-pipeline=my-run-demo-app-1 --region=asia-south1 --skaffold-file=skaffold.yaml
+        else
+          echo "Deployment succeeded, no rollback needed."
+        fi
 
 images:
   - 'asia-south1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-01/my-app-1:latest'
