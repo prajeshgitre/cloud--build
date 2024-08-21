@@ -39,7 +39,7 @@ steps:
   - name: 'curlimages/curl'  # Use curl image to make HTTP requests
     entrypoint: 'sh'
     args:
-      - -c
+      - '-c'
       - |
         # Send a request to the Cloud Run service and capture the HTTP status code
         response=$(curl -o /dev/null -s -w "%{http_code}\n" https://dev-gf22ekzyxq-el.a.run.app)
@@ -49,7 +49,6 @@ steps:
           echo "Deployment successful! Service is healthy."
         elif [ "$response" -eq 500 ]; then
           echo "Deployment failed with status 500! Rolling back..."
-
           # Get the list of all releases and check their statuses
           releases=$(gcloud deploy releases list \
             --delivery-pipeline=my-run-demo-app-1 \
@@ -76,6 +75,7 @@ steps:
           fi
 
           # Rollback to the last successful release
+          # Use the google/cloud-sdk image for rollback
           gcloud deploy releases rollback $last_successful_release \
             --delivery-pipeline=my-run-demo-app-1 \
             --region=asia-south1
