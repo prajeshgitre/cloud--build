@@ -58,23 +58,11 @@ steps:
 
           last_successful_release=""
 
-          for release in $releases; do
-            release_status=$(gcloud deploy releases describe $release \
-              --delivery-pipeline=my-run-demo-app-1 \
-              --region=asia-south1 \
-              --format="value(renderState)")
-
-            if [[ "$release_status" == "SUCCEEDED" ]]; then
-              last_successful_release=$release
-              break
-            fi
-          done
-
-          if [[ -z "$last_successful_release" ]]; then
-            echo "No previous successful release found. Rollback not possible."
-            exit 1
-          fi
-
+        last_release = gcloud deploy releases list \
+      --delivery-pipeline=my-run-demo-app-1 \
+      --region=asia-south1 \
+      --format="yaml(name)" | awk -F'/' '{print $NF}' | sed -n '4p'
+      
           # Rollback to the last successful release
           gcloud deploy releases rollback $last_successful_release \
             --delivery-pipeline=my-run-demo-app-1 \
