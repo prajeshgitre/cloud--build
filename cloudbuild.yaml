@@ -28,19 +28,7 @@ steps:
                             --delivery-pipeline=my-run-demo-app-1 \
                             --skaffold-file=skaffold.yaml
 
-  # Step 4: Describe the release
-  - name: 'google/cloud-sdk:latest'
-    id: Describe Cloud Deploy Release
-    entrypoint: 'gcloud'
-    args:
-      - 'deploy'
-      - 'releases'
-      - 'describe'
-      - 'my-app-1-$SHORT_SHA'
-      - '--delivery-pipeline=my-run-demo-app-1'
-      - '--region=asia-south1'
-
-  # Step 5: Check the status of the deployed service
+  # Step 4: Check the status of the deployed service
   - name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: 'bash'
     args:
@@ -80,13 +68,10 @@ steps:
             exit 1
           fi
 
-          # Re-deploy the last successful release
-          gcloud deploy releases create $last_successful_release-rollback-$SHORT_SHA \
+          # Rollback to the last successful release
+          gcloud deploy releases rollback $last_successful_release \
             --delivery-pipeline=my-run-demo-app-1 \
-            --to-target=dev \
-            --region=asia-south1 \
-            --file=cloud-deploy/dev/pipeline.yaml \
-            --skaffold-file=skaffold.yaml
+            --region=asia-south1
 
         else
           echo "Deployment failed with status $response! Exiting."
