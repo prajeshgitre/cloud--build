@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def main():
-    return_resp = {"error": "Hello, World!"}
+    return_resp = {"error"}
     return jsonify(return_resp)
 
 if __name__ == '__main__':
