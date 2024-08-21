@@ -63,7 +63,8 @@ steps:
             last_release = gcloud deploy releases list \
              --delivery-pipeline=my-run-demo-app-1 \
              --region=asia-south1 \
-             --format="yaml(name)" | awk -F'/' '{print \'$NF'}' | sed -n '4p'
+             --format="yaml(name)" | awk -F'/' '{split($0,a,"/"); print a[length(a)]}'
+
 
           # Rollback to the last successful release
           gcloud deploy releases rollback $last_release \
