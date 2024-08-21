@@ -51,20 +51,34 @@ steps:
         elif [ "$response" -eq 500 ]; then
           echo "Deployment failed with status 500! Rolling back..."
 
-          # Get the last release using awk and sed
-          last_release=$(gcloud deploy releases list \
+          # Get the list of all releases and check their statuses
+          releases=$(gcloud deploy releases list \
             --delivery-pipeline=my-run-demo-app-1 \
             --region=asia-south1 \
-            --format="yaml(name)" | awk -F'/' '{print $NF}' | sed -n '4p')
+            --format="value(name)")
 
-          # Check if a last release was found
-          if [ -z "$last_release" ]; then
+          last_successful_release=""
+
+          # Find the last successful release
+          for release in $releases; do
+            release_status=$(gcloud deploy releases describe $release \
+              --delivery-pipeline=my-run-demo-app-1 \
+              --region=asia-south1 \
+              --format="value(renderState)")
+
+            if [ "$release_status" == "SUCCEEDED" ]; then
+              last_successful_release=$release
+              break
+            fi
+          done
+
+          if [ -z "$last_successful_release" ]; then
             echo "No previous successful release found. Rollback not possible."
             exit 1
           fi
 
           # Rollback to the last successful release
-          gcloud deploy releases rollback $last_release \
+          gcloud deploy releases rollback $last_successful_release \
             --delivery-pipeline=my-run-demo-app-1 \
             --region=asia-south1
         else
