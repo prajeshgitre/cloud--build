@@ -36,7 +36,7 @@ steps:
       - 'sleep 60'
 
   # Step 5: Check the status of the deployed service
-  - name: 'curlimages/curl'  # Use curl image to make HTTP requests
+  - name: 'google/cloud-sdk:latest'  # Use curl image to make HTTP requests
     entrypoint: 'sh'
     args:
       - '-c'
