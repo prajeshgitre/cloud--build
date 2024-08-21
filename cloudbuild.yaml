@@ -26,19 +26,22 @@ steps:
         gcloud deploy apply --file cloud-deploy/dev/target.yaml
         gcloud deploy releases create my-app-1-$SHORT_SHA \
                             --delivery-pipeline=my-run-demo-app-1 \
-                            --skaffold-file=skaffold.yaml
+                            --skaffold-file=skaffold.yaml || DEPLOYMENT_FAILED=true
 
   # Step 4: Describe the release
   - name: 'google/cloud-sdk:latest'
     id: Describe Cloud Deploy Release
-    entrypoint: 'gcloud'
+    entrypoint: 'sh'
     args:
-      - 'deploy'
-      - 'releases'
-      - 'describe'
-      - 'my-app-1-$SHORT_SHA'
-      - '--delivery-pipeline=my-run-demo-app-1'
-      - '--region=asia-south1'
+      - -c
+      - |
+        if [ "$DEPLOYMENT_FAILED" = true ]; then
+          echo "Deployment failed."
+        else
+          gcloud deploy releases describe my-app-1-$SHORT_SHA \
+          --delivery-pipeline=my-run-demo-app-1 \
+          --region=asia-south1
+        fi
 
   # Step 5: Rollback if deployment fails
   - name: 'google/cloud-sdk:latest'
@@ -47,10 +50,8 @@ steps:
     args:
       - -c
       - |
-        set -e
-        DEPLOYMENT_STATUS=$(gcloud deploy releases describe my-app-1-$SHORT_SHA --delivery-pipeline=my-run-demo-app-1 --region=asia-south1 --format='value(status)')
-        if [ "$DEPLOYMENT_STATUS" != "SUCCESS" ]; then
-          echo "Deployment failed, rolling back to the previous release..."
+        if [ "$DEPLOYMENT_FAILED" = true ]; then
+          echo "Rolling back to the previous release..."
           PREV_RELEASE=$(gcloud deploy releases list --delivery-pipeline=my-run-demo-app-1 --region=asia-south1 --sort-by=~createTime --limit=2 --format='value(name)' | tail -n 1)
           gcloud deploy releases create $PREV_RELEASE --delivery-pipeline=my-run-demo-app-1 --region=asia-south1 --skaffold-file=skaffold.yaml
         else
