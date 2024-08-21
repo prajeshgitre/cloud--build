@@ -28,7 +28,11 @@ steps:
                             --delivery-pipeline=my-run-demo-app-1 \
                             --skaffold-file=skaffold.yaml
 
-  # Step 4: Check the status of the deployed service
+  # Step 4: Wait for 60 seconds
+  - name: 'gcr.io/cloud-builders/busybox'
+    args: ['sleep', '60']
+
+  # Step 5: Check the status of the deployed service
   - name: 'curlimages/curl'  # Use curl image to make HTTP requests
     entrypoint: 'sh'
     args:
