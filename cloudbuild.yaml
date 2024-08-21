@@ -13,33 +13,41 @@ steps:
       - 'push'
       - 'asia-south1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-01/my-app-1:latest'
 
-  # Step 3: Trigger Cloud Deploy
-  - name: 'google/cloud-sdk:latest'
-    id: Trigger Cloud Deploy
-    entrypoint: 'sh'
-    args:
-      - -xe
-      - -c
-      - |
-        gcloud config set deploy/region asia-south1
-        gcloud deploy apply --file cloud-deploy/dev/pipeline.yaml
-        gcloud deploy apply --file cloud-deploy/dev/target.yaml
-        gcloud deploy releases create my-app-1-$SHORT_SHA \
-                            --delivery-pipeline=my-run-demo-app-1 \
-                            --skaffold-file=skaffold.yaml
-                          
-
-  # Step 4: Describe the release
-  - name: 'google/cloud-sdk:latest'
-    id: Describe Cloud Deploy Release
+  # Step 3: Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: 'gcloud'
     args:
+      - 'run'
       - 'deploy'
-      - 'releases'
-      - 'describe'
-      - 'my-app-1-$SHORT_SHA'
-      - '--delivery-pipeline=my-run-demo-app-1'
-      - '--region=asia-south1'
+      - 'my-app-1'
+      - '--image'
+      - 'asia-south1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-01/my-app-1:latest'
+      - '--platform'
+      - 'managed'
+      - '--region'
+      - 'asia-south1'
+      - '--allow-unauthenticated'
+
+  # Step 4: Check the deployed service status
+  - name: 'curlimages/curl'  # Use curl image to make HTTP requests
+    entrypoint: 'sh'
+    args:
+      - '-c'
+      - |
+        # Send a request to the Cloud Run service and capture the HTTP status code
+        response=$(curl -o /dev/null -s -w "%{http_code}\n" https://dev-gf22ekzyxq-el.a.run.app)
+
+        # Check the status code and take action
+        if [ "$response" -eq 200 ]; then
+          echo "Deployment successful! Service is healthy."
+        elif [ "$response" -eq 500 ]; then
+          echo "Deployment failed with status 500! Rolling back..."
+          # Add your rollback command here, for example:
+          # gcloud deploy releases rollback my-app-1-previous-release --region=asia-south1
+        else
+          echo "Deployment failed with status $response! Exiting."
+          exit 1
+        fi
 
 images:
   - 'asia-south1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-01/my-app-1:latest'
