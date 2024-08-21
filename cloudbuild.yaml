@@ -38,6 +38,7 @@ steps:
         response=$(curl -o /dev/null -s -w "%{http_code}\n" https://dev-gf22ekzyxq-el.a.run.app)
 
         # Check the status code and take action
+        echo "$response"
         if [ "$response" -eq 200 ]; then
           echo "Deployment successful! Service is healthy."
         elif [ "$response" -eq 500 ]; then
