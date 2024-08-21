@@ -43,14 +43,28 @@ steps:
         elif [ "$response" -eq 500 ]; then
           echo "Deployment failed with status 500! Rolling back..."
 
-          # Get the last successful release
+          # Get the name of the last successful release
           last_release=$(gcloud deploy releases list \
             --delivery-pipeline=my-run-demo-app-1 \
             --region=asia-south1 \
-            --format="value(name)" | sed -n '2p')
+            --filter="status=SUCCEEDED" \
+            --sort-by="~createTime" \
+            --limit=1 \
+            --format="value(name)")
 
-          # Rollback to the last release
-          gcloud deploy releases rollback $last_release --to-target=dev
+          if [ -z "$last_release" ]; then
+            echo "No previous successful release found. Rollback not possible."
+            exit 1
+          fi
+
+          # Re-deploy the last successful release
+          gcloud deploy releases create $last_release-rollback-$SHORT_SHA \
+            --delivery-pipeline=my-run-demo-app-1 \
+            --to-target=dev \
+            --region=asia-south1 \
+            --file=cloud-deploy/dev/pipeline.yaml \
+            --skaffold-file=skaffold.yaml
+
         else
           echo "Deployment failed with status $response! Exiting."
           exit 1
