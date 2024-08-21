@@ -27,19 +27,36 @@ steps:
         gcloud deploy releases create my-app-1-$SHORT_SHA \
                             --delivery-pipeline=my-run-demo-app-1 \
                             --skaffold-file=skaffold.yaml
-                          
 
-  # Step 4: Describe the release
+  # Step 4: Describe the release and check for failure
   - name: 'google/cloud-sdk:latest'
     id: Describe Cloud Deploy Release
-    entrypoint: 'gcloud'
+    entrypoint: 'sh'
     args:
-      - 'deploy'
-      - 'releases'
-      - 'describe'
-      - 'my-app-1-$SHORT_SHA'
-      - '--delivery-pipeline=my-run-demo-app-1'
-      - '--region=asia-south1'
+      - -xe
+      - -c
+      - |
+        RENDER_STATE=$(gcloud deploy releases describe "my-app-1-$SHORT_SHA" \
+          --delivery-pipeline="my-run-demo-app-1" \
+          --region="asia-south1" \
+          --format "yaml(renderState)" \
+          | awk '{print $2}')
+        echo "Render State: $RENDER_STATE"
+        if [[ "$RENDER_STATE" != "SUCCEEDED" ]]; then
+          echo "Deployment failed, rolling back to the previous version..."
+          PREV_RELEASE=$(gcloud deploy releases list \
+            --delivery-pipeline=my-run-demo-app-1 \
+            --region=asia-south1 \
+            --format="value(name)" \
+            --limit=2 | tail -n1)
+          echo "Rolling back to $PREV_RELEASE"
+          gcloud deploy targets rollback dev \
+            --delivery-pipeline=my-run-demo-app-1 \
+            --region="asia-south1" \
+            --release="$PREV_RELEASE"
+        else
+          echo "Deployment succeeded."
+        fi
 
 images:
   - 'asia-south1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-01/my-app-1:latest'
