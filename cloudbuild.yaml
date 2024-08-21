@@ -24,18 +24,22 @@ steps:
         gcloud config set deploy/region asia-south1
         gcloud deploy apply --file cloud-deploy/dev/pipeline.yaml
         gcloud deploy apply --file cloud-deploy/dev/target.yaml
-        gcloud deploy releases create my-app-1-$SHORT_SHA \
+        gcloud deploy releases create my-app-1-${SHORT_SHA} \
                             --delivery-pipeline=my-run-demo-app-1 \
                             --skaffold-file=skaffold.yaml
 
-  # Step 4: Wait for 60 seconds
-  - name: 'gcr.io/cloud-builders/busybox'
-    args: ['sleep', '60']
-
-  # Step 5: Check the status of the deployed service
-  - name: 'curlimages/curl'  # Use curl image to make HTTP requests
+  # Step to wait for 60 seconds
+  - name: 'alpine:latest'
     entrypoint: 'sh'
     args:
+      - '-c'
+      - 'sleep 60'
+
+  # Step 4: Check the status of the deployed service
+  - name: 'google/cloud-sdk:latest'
+    entrypoint: 'sh'
+    args:
+      - -xe
       - -c
       - |
         # Send a request to the Cloud Run service and capture the HTTP status code
@@ -47,36 +51,22 @@ steps:
         elif [ "$response" -eq 500 ]; then
           echo "Deployment failed with status 500! Rolling back..."
 
-          # Get the list of all releases and check their statuses
-          releases=$(gcloud deploy releases list \
+          # Get the last release using awk and sed
+          last_release=$(gcloud deploy releases list \
             --delivery-pipeline=my-run-demo-app-1 \
             --region=asia-south1 \
-            --format="value(name)")
+            --format="yaml(name)" | awk -F'/' '{print $NF}' | sed -n '4p')
 
-          last_successful_release=""
-
-          for release in $releases; do
-            release_status=$(gcloud deploy releases describe $release \
-              --delivery-pipeline=my-run-demo-app-1 \
-              --region=asia-south1 \
-              --format="value(renderState)")
-
-            if [ "$release_status" == "SUCCEEDED" ]; then
-              last_successful_release=$release
-              break
-            fi
-          done
-
-          if [ -z "$last_successful_release" ]; then
+          # Check if a last release was found
+          if [ -z "$last_release" ]; then
             echo "No previous successful release found. Rollback not possible."
             exit 1
           fi
 
           # Rollback to the last successful release
-          gcloud deploy releases rollback $last_successful_release \
+          gcloud deploy releases rollback $last_release \
             --delivery-pipeline=my-run-demo-app-1 \
             --region=asia-south1
-
         else
           echo "Deployment failed with status $response! Exiting."
           exit 1
