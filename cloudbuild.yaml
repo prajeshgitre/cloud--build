@@ -67,9 +67,10 @@ steps:
 
 
           # Rollback to the last successful release
-          gcloud deploy releases rollback $last_release \
-            --delivery-pipeline=my-run-demo-app-1 \
-            --region=asia-south1
+         gcloud deploy targets rollback dev \
+          --delivery-pipeline=my-run-demo-app-1 \
+          --region="asia-south1" \
+          --release="$last_release"
         else
           echo "Deployment failed with status $response! Exiting."
           exit 1
