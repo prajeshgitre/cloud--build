@@ -29,10 +29,10 @@ steps:
                             --skaffold-file=skaffold.yaml
 
   # Step 4: Check the status of the deployed service
-   - name: 'curlimages/curl'  # Use curl image to make HTTP requests
+  - name: 'curlimages/curl'  # Use curl image to make HTTP requests
     entrypoint: 'sh'
     args:
-      - '-c'
+      - -c
       - |
         # Send a request to the Cloud Run service and capture the HTTP status code
         response=$(curl -o /dev/null -s -w "%{http_code}\n" https://dev-gf22ekzyxq-el.a.run.app)
@@ -42,10 +42,6 @@ steps:
           echo "Deployment successful! Service is healthy."
         elif [ "$response" -eq 500 ]; then
           echo "Deployment failed with status 500! Rolling back..."
-          # Add your rollback command here, for example:
-          # gcloud deploy releases rollback my-app-1-previous-release --region=asia-south1
-        else
-          echo "Deployment failed with status $response! Exiting."
 
           # Get the list of all releases and check their statuses
           releases=$(gcloud deploy releases list \
