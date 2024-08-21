@@ -28,26 +28,27 @@ steps:
                             --delivery-pipeline=my-run-demo-app-1 \
                             --skaffold-file=skaffold.yaml
 
-  # Step 4: Wait for 60 seconds
+  # Step to wait for 60 seconds
   - name: 'alpine:latest'
     entrypoint: 'sh'
     args:
       - '-c'
       - 'sleep 60'
 
-  # Step 5: Check the status of the deployed service
-  - name: 'google/cloud-sdk:latest'  # Use curl image to make HTTP requests
+  # Step 4: Check the status of the deployed service
+  - name: 'google/cloud-sdk:latest'
     entrypoint: 'sh'
     args:
-      - '-c'
+      - -xe
+      - -c
       - |
         # Send a request to the Cloud Run service and capture the HTTP status code
         response=$(curl -o /dev/null -s -w "%{http_code}\n" https://dev-gf22ekzyxq-el.a.run.app)
 
         # Check the status code and take action
-        if [ "$response" -eq 200 ]; then
+        if [[ "$response" -eq 200 ]]; then
           echo "Deployment successful! Service is healthy."
-        elif [ "$response" -eq 500 ]; then
+        elif [[ "$response" -eq 500 ]]; then
           echo "Deployment failed with status 500! Rolling back..."
           # Get the list of all releases and check their statuses
           releases=$(gcloud deploy releases list \
@@ -63,19 +64,18 @@ steps:
               --region=asia-south1 \
               --format="value(renderState)")
 
-            if [ "$release_status" == "SUCCEEDED" ]; then
+            if [[ "$release_status" == "SUCCEEDED" ]]; then
               last_successful_release=$release
               break
             fi
           done
 
-          if [ -z "$last_successful_release" ]; then
+          if [[ -z "$last_successful_release" ]]; then
             echo "No previous successful release found. Rollback not possible."
             exit 1
           fi
 
           # Rollback to the last successful release
-          # Use the google/cloud-sdk image for rollback
           gcloud deploy releases rollback $last_successful_release \
             --delivery-pipeline=my-run-demo-app-1 \
             --region=asia-south1
