@@ -29,8 +29,11 @@ steps:
                             --skaffold-file=skaffold.yaml
 
   # Step 4: Wait for 60 seconds
-  - name: 'gcr.io/cloud-builders/busybox'
-    args: ['sleep', '60']
+  - name: 'alpine:latest'
+    entrypoint: 'sh'
+    args:
+      - '-c'
+      - 'sleep 60'
 
   # Step 5: Check the status of the deployed service
   - name: 'curlimages/curl'  # Use curl image to make HTTP requests
