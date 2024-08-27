@@ -43,7 +43,11 @@ steps:
       - -c
       - |
         # Send a request to the Cloud Run service and capture the HTTP status code
-        response=$(curl -o /dev/null -s -w "%{http_code}\n" https://dev-gf22ekzyxq-el.a.run.app)
+        # response=$(curl -o /dev/null -s -w "%{http_code}\n" https://dev-gf22ekzyxq-el.a.run.app)
+        url=$(gcloud run services describe my-app-1 --platform managed --region asia-south1 --format 'value(status.url)')
+
+              # Use curl to get the HTTP response code
+        response=$(curl -o /dev/null -s -w "%{http_code}\n" "$url")
 
         # Check the status code and take action
         if [ "$response" -eq 200 ]; then
