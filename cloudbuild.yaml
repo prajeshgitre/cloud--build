@@ -13,7 +13,7 @@ steps:
       - 'push'
       - 'asia-south1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-01/my-app-1:latest'
 
-  # Step 3: Trigger Cloud Deploy
+  # Step 3: Trigger Cloud Deploy with inline Skaffold configuration
   - name: 'google/cloud-sdk:latest'
     id: Trigger Cloud Deploy
     entrypoint: 'sh'
@@ -24,6 +24,26 @@ steps:
         gcloud config set deploy/region asia-south1
         gcloud deploy apply --file cloud-deploy/dev/pipeline.yaml
         gcloud deploy apply --file cloud-deploy/dev/target.yaml
+
+        # Inline Skaffold configuration
+        cat <<EOF > skaffold.yaml
+        apiVersion: skaffold/v4beta7
+        kind: Config
+        metadata:
+          name: myapp
+        profiles:
+        - name: dev
+          manifests:
+            rawYaml:
+            - cloud-deploy/dev/dev.yaml
+        - name: prod
+          manifests:
+            rawYaml:
+            - cloud-deploy/prod/prod.yaml
+        deploy:
+          cloudrun: {}
+        EOF
+
         gcloud deploy releases create my-app-1-${SHORT_SHA} \
                             --delivery-pipeline=my-run-demo-app-1 \
                             --skaffold-file=skaffold.yaml
@@ -42,12 +62,10 @@ steps:
       - -xe
       - -c
       - |
-        # Send a request to the Cloud Run service and capture the HTTP status code
-        # response=$(curl -o /dev/null -s -w "%{http_code}\n" https://dev-gf22ekzyxq-el.a.run.app)
         profile="dev"
         url=$(gcloud run services describe "$profile" --platform managed --region asia-south1 --format 'value(status.url)')
 
-              # Use curl to get the HTTP response code
+        # Use curl to get the HTTP response code
         response=$(curl -o /dev/null -s -w "%{http_code}\n" "$url")
 
         # Check the status code and take action
@@ -56,26 +74,16 @@ steps:
         elif [ "$response" -eq 500 ]; then
           echo "Deployment failed with status 500! Rolling back..."
 
-          # Get the list of all releases and check their statuses
-          releases=$(gcloud deploy releases list \
+          last_release=$(gcloud deploy releases list \
             --delivery-pipeline=my-run-demo-app-1 \
             --region=asia-south1 \
-            --format="value(name)")
-
-          last_successful_release=""
-
-          # Find the last successful release
-            last_release = gcloud deploy releases list \
-             --delivery-pipeline=my-run-demo-app-1 \
-             --region=asia-south1 \
-             --format="yaml(name)" | awk -F'/' '{split($0,a,"/"); print a[length(a)]}'
-
+            --format="yaml(name)" | awk -F'/' '{split($0,a,"/"); print a[length(a)]}')
 
           # Rollback to the last successful release
-         gcloud deploy targets rollback dev \
-          --delivery-pipeline=my-run-demo-app-1 \
-          --region="asia-south1" \
-          --release="$last_release"
+          gcloud deploy targets rollback dev \
+            --delivery-pipeline=my-run-demo-app-1 \
+            --region="asia-south1" \
+            --release="$last_release"
         else
           echo "Deployment failed with status $response! Exiting."
           exit 1
