@@ -46,7 +46,7 @@ steps:
 
         gcloud deploy releases create my-app-1-${SHORT_SHA} \
                             --delivery-pipeline=my-run-demo-app-1 \
-                            --skaffold-file=skaffold.yaml
+                        
 
   # Step to wait for 60 seconds
   - name: 'alpine:latest'
