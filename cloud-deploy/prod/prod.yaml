@@ -1,7 +1,7 @@
 apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
-  name: prod
+  name: crn-visitor-connect-prod-as1-node-admin-application
 spec:
   template:
     metadata:
