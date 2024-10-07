@@ -9,8 +9,8 @@ spec:
         autoscaling.knative.dev/maxScale: "1"
     spec:
       containers:
-      - name: myapp
-        image: asia-south1-docker.pkg.dev/infra-samruddh-bharat-poc-01/my-app-01/my-app-1:latest
+      - name: node-app
+        image: asia-south1-docker.pkg.dev/prj-visitor-connect-prod-goa/my-app-01/my-app-1:latest
         ports:
         - containerPort:  80
         resources:
