@@ -5,9 +5,6 @@ metadata:
 description: main application pipeline
 serialPipeline:
   stages:
-    # - targetId: dev
-    #   profiles:
-    #     - dev
     - targetId: prod
       profiles:
         - prod
