@@ -88,4 +88,6 @@ steps:
 images:
   - 'asia-south1-docker.pkg.dev/prj-visitor-connect-prod-goa/repo-visitor-connect-prod-as1-01/node-app:latest'
 
-# logsBucket: 'None'
+options:
+  logging: NONE
+
