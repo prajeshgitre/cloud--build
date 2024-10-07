@@ -41,7 +41,7 @@ steps:
         EOF
 
         gcloud deploy releases create node-app-${SHORT_SHA} \
-                            --delivery-pipeline=my-run-demo-app-1 \
+                            --delivery-pipeline=cdep-visitor-connect-prod-as1-01 \
                         
 
   # Step to wait for 60 seconds
@@ -77,7 +77,7 @@ steps:
 
           # Rollback to the last successful release
           gcloud deploy targets rollback dev \
-            --delivery-pipeline=my-run-demo-app-1 \
+            --delivery-pipeline=cdep-visitor-connect-prod-as1-01 \
             --region="asia-south1" \
             --release="$last_release"
         else
