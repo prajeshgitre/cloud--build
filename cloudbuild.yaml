@@ -71,7 +71,7 @@ steps:
           echo "Deployment failed with status 500! Rolling back..."
 
           last_release=$(gcloud deploy releases list \
-            --delivery-pipeline=my-run-demo-app-1 \
+            --delivery-pipeline=cdep-visitor-connect-prod-as1-01 \
             --region=asia-south1 \
             --format="yaml(name)" | awk -F'/' '{split($0,a,"/"); print a[length(a)]}')
 
