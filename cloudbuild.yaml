@@ -30,12 +30,8 @@ steps:
         apiVersion: skaffold/v4beta7
         kind: Config
         metadata:
-          name: myapp
+          name: node-app
         profiles:
-        - name: dev
-          manifests:
-            rawYaml:
-            - cloud-deploy/dev/dev.yaml
         - name: prod
           manifests:
             rawYaml:
