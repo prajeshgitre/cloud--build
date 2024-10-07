@@ -58,7 +58,7 @@ steps:
       - -xe
       - -c
       - |
-        profile="dev"
+        profile="prod"
         url=$(gcloud run services describe "$profile" --platform managed --region asia-south1 --format 'value(status.url)')
 
         # Use curl to get the HTTP response code
