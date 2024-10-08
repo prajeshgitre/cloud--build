@@ -5,9 +5,13 @@ metadata:
   description: Cloud Run target for prod environment
 executionConfigs:
   - serviceAccount: "sa-cloudbuild@prj-visitor-connect-prod-goa.iam.gserviceaccount.com"
-deployParameters:  # Fix the incorrect field
+    usages:  # This is the missing field
+      - RENDER
+      - DEPLOY
+deployParameters:  # Defines the Cloud Run target parameters
   location: asia-south1
   service: crn-visitor-connect-prod-as1-node-admin
+
 
 
 
