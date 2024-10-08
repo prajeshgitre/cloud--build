@@ -2,13 +2,26 @@ apiVersion: deploy.cloud.google.com/v1
 kind: Target
 metadata:
   name: prod
-description: Cloud Run target for prod environment
-executionConfigs:
-  - serviceAccount: "sa-cloudbuild@prj-visitor-connect-prod-goa.iam.gserviceaccount.com"
-deployConfig:
-  cloudRun:
-    location: asia-south1
-    service: crn-visitor-connect-prod-as1-node-admin
+  description: Cloud Run target for prod environment
+spec:  
+  executionConfigs:
+    - serviceAccount: "sa-cloudbuild@prj-visitor-connect-prod-goa.iam.gserviceaccount.com"
+  deployConfig:
+    cloudRun:
+      location: asia-south1
+      service: crn-visitor-connect-prod-as1-node-admin
+
+# apiVersion: deploy.cloud.google.com/v1
+# kind: Target
+# metadata:
+#   name: prod
+# description: Cloud Run target for prod environment
+# executionConfigs:
+#   - serviceAccount: "sa-cloudbuild@prj-visitor-connect-prod-goa.iam.gserviceaccount.com"
+# deployConfig:
+#   cloudRun:
+#     location: asia-south1
+#     service: crn-visitor-connect-prod-as1-node-admin
 
 # ---
 # apiVersion: deploy.cloud.google.com/v1
