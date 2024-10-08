@@ -13,7 +13,7 @@ steps:
       - 'push'
       - 'asia-south1-docker.pkg.dev/prj-visitor-connect-prod-goa/repo-visitor-connect-prod-as1-01/node-app:latest'
 
-  # Step 3: Trigger Cloud Deploy with updated Skaffold configuration
+  # Step 3: Trigger Cloud Deploy with inline Skaffold configuration
   - name: 'google/cloud-sdk:latest'
     id: Trigger Cloud Deploy
     entrypoint: 'sh'
@@ -32,22 +32,17 @@ steps:
         metadata:
           name: node-app
         profiles:
-          - name: prod
-            deploy:
-              cloudrun:
-                service: crn-visitor-connect-prod-as1-node-admin
-                region: asia-south1 
-                image: asia-south1-docker.pkg.dev/prj-visitor-connect-prod-goa/repo-visitor-connect-prod-as1-01/node-app:latest  
-            manifests:
-              rawYaml:
-                - cloud-deploy/prod/prod.yaml
+        - name: prod
+          manifests:
+            rawYaml:
+            - cloud-deploy/prod/prod.yaml
+        deploy:
+          cloudrun: {}
         EOF
 
-        # Create a release using Skaffold configuration
         gcloud deploy releases create node-app-${SHORT_SHA} \
-          --delivery-pipeline=cdep-visitor-connect-prod-as1-01 \
-          --region=asia-south1 \
-          --release-notes="Deploying the latest version of node-app"
+                            --delivery-pipeline=cdep-visitor-connect-prod-as1-01 \
+                        
 
   # Step to wait for 60 seconds
   - name: 'alpine:latest'
