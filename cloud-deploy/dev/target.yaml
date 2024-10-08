@@ -4,14 +4,15 @@ metadata:
   name: prod
   description: Cloud Run target for prod environment
 executionConfigs:
-  - usages:
+  - serviceAccount: "sa-cloudbuild@prj-visitor-connect-prod-goa.iam.gserviceaccount.com"
+    usages:  
       - RENDER
       - DEPLOY
-    serviceAccount: "sa-cloudbuild@prj-visitor-connect-prod-goa.iam.gserviceaccount.com"
-deployConfig:
-  cloudRun:
-    location: asia-south1
-    service: crn-visitor-connect-prod-as1-node-admin
+deployParameters:  # Defines the Cloud Run target parameters
+  location: asia-south1
+  service: crn-visitor-connect-prod-as1-node-admin
+
+
 
 
 
