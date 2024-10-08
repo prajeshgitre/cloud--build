@@ -1,7 +1,7 @@
 apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
-  name: node-app
+  name: crn-visitor-connect-prod-as1-node-admin  
 spec:
   template:
     spec:
@@ -9,6 +9,18 @@ spec:
         - image: asia-south1-docker.pkg.dev/prj-visitor-connect-prod-goa/repo-visitor-connect-prod-as1-01/node-app:latest
           ports:
             - containerPort: 80
+
+# apiVersion: serving.knative.dev/v1
+# kind: Service
+# metadata:
+#   name: node-app
+# spec:
+#   template:
+#     spec:
+#       containers:
+#         - image: asia-south1-docker.pkg.dev/prj-visitor-connect-prod-goa/repo-visitor-connect-prod-as1-01/node-app:latest
+#           ports:
+#             - containerPort: 80
 
 
 # apiVersion: serving.knative.dev/v1
