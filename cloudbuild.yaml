@@ -37,27 +37,12 @@ steps:
             rawYaml:
             - cloud-deploy/prod/prod.yaml
         deploy:
-          cloudrun:
-            flags:
-              deploy: [
-                "--region=asia-south1",
-                "--allow-unauthenticated=false",
-                "--platform=managed",
-                "--cpu=4",
-                "--memory=8Gi",
-                "--service-account=sa-cloudrun@prj-visitor-connect-prod-goa.iam.gserviceaccount.com",
-                "--port=8080",
-                "--use-http2",
-                "--vpc-egress=private-ranges-only",
-                "--network=vpc-visitor-connect-prod-goa-01",
-                "--subnet=sb-prod-as1-cr-01",
-                "--session-affinity"
-              ]
+          cloudrun: {}
         EOF
 
-        gcloud deploy releases create node-app-${SHORT_SHA} \
+        gcloud deploy releases create my-app-1-${SHORT_SHA} \
                             --delivery-pipeline=cdep-visitor-connect-prod-as1-01 \
-                            --region="asia-south1"
+                           
 
   # Step to wait for 60 seconds
   - name: 'alpine:latest'
@@ -73,7 +58,7 @@ steps:
       - -xe
       - -c
       - |
-        profile="prod"
+        profile="prod"  
         url=$(gcloud run services describe "$profile" --platform managed --region asia-south1 --format 'value(status.url)')
 
         # Use curl to get the HTTP response code
@@ -91,7 +76,7 @@ steps:
             --format="yaml(name)" | awk -F'/' '{split($0,a,"/"); print a[length(a)]}')
 
           # Rollback to the last successful release
-          gcloud deploy targets rollback dev \
+          gcloud deploy targets rollback prod \
             --delivery-pipeline=cdep-visitor-connect-prod-as1-01 \
             --region="asia-south1" \
             --release="$last_release"
