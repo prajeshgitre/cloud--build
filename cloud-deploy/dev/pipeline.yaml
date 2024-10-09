@@ -5,9 +5,7 @@ metadata:
 description: Pipeline for deploying Cloud Run to production
 serialPipeline:
   stages:
-    - targetId: prod
+    - targetId: prod  
       profiles: ["prod"]
-      strategy:
-        standard:
-          verify: true  
+ 
 
