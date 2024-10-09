@@ -1,19 +1,19 @@
-apiVersion: serving.knative.dev/v1
-kind: Service
-metadata:
-  name: dev
-spec:
-  template:
-    metadata:
-      annotations:
-        autoscaling.knative.dev/maxScale: "1"
-    spec:
-      containers:
-      - name: myapp
-        image: asia-south1-docker.pkg.dev/prj-visitor-connect-prod-goa/repo-visitor-connect-prod-as1-01/node-app:latest
-        ports:
-        - containerPort:  80
-        resources:
-          limits:
-            cpu: 1000m
-            memory: 128Mi
+# apiVersion: serving.knative.dev/v1
+# kind: Service
+# metadata:
+#   name: dev
+# spec:
+#   template:
+#     metadata:
+#       annotations:
+#         autoscaling.knative.dev/maxScale: "1"
+#     spec:
+#       containers:
+#       - name: myapp
+#         image: asia-south1-docker.pkg.dev/prj-visitor-connect-prod-goa/repo-visitor-connect-prod-as1-01/node-app:latest
+#         ports:
+#         - containerPort:  80
+#         resources:
+#           limits:
+#             cpu: 1000m
+#             memory: 128Mi
