@@ -37,12 +37,28 @@ steps:
             rawYaml:
             - cloud-deploy/prod/prod.yaml
         deploy:
-          cloudrun: {}
+          cloudrun:
+            flags:
+              deploy: [
+                "--region=asia-south1",
+                "--allow-unauthenticated=false",
+                "--platform=managed",
+                "--cpu=4",
+                "--memory=8Gi",
+                "--service-account=sa-cloudrun@prj-visitor-connect-prod-goa.iam.gserviceaccount.com",
+                "--port=8080",
+                "--use-http2",
+                "--vpc-egress=private-ranges-only",
+                "--network=vpc-visitor-connect-prod-goa-01",
+                "--subnet=sb-prod-as1-cr-01",
+                "--session-affinity"
+                "--service=crn-visitor-connect-prod-as1-node-admin"
+              ]
         EOF
 
         gcloud deploy releases create node-app-${SHORT_SHA} \
                             --delivery-pipeline=cdep-visitor-connect-prod-as1-01 \
-                        
+                            --region="asia-south1"
 
   # Step to wait for 60 seconds
   - name: 'alpine:latest'
