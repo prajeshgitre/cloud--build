@@ -2,21 +2,26 @@ apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
   name: crn-visitor-connect-prod-as1-node-admin
+  annotations:
+    autoscaling.knative.dev/maxScale: "1"
+    serving.knative.dev/allow-unauthenticated: "false"  
 spec:
   template:
     metadata:
       annotations:
-        autoscaling.knative.dev/maxScale: "1"
+        serving.knative.dev/sessionAffinity: "ClientIP"  
     spec:
+      serviceAccountName: sa-cloudrun@prj-visitor-connect-prod-goa.iam.gserviceaccount.com  
       containers:
-      - name: myapp
+      - name: node-app
         image: asia-south1-docker.pkg.dev/prj-visitor-connect-prod-goa/repo-visitor-connect-prod-as1-01/node-app:latest
         ports:
-        - containerPort:  80
+        - containerPort: 8080  # Updated port
         resources:
           limits:
-            cpu: 1000m
-            memory: 128Mi
+            cpu: "4000m"  
+            memory: 8Gi    
+ 
 
 
 
