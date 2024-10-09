@@ -5,7 +5,7 @@ metadata:
 description: Cloud Run production service
 run:
   location: asia-south1 
-  project: prj-visitor-connect-prod-goa  # Specify your project ID
+  
 
 
 # apiVersion: deploy.cloud.google.com/v1
