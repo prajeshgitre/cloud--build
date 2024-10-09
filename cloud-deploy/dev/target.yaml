@@ -1,3 +1,13 @@
+apiVersion: deploy.cloud.google.com/v1
+kind: Target
+metadata:
+  name: prod
+description: Cloud Run production service
+run:
+  location: asia-south1 
+  project: prj-visitor-connect-prod-goa  # Specify your project ID
+
+
 # apiVersion: deploy.cloud.google.com/v1
 # kind: Target
 # metadata:
@@ -11,17 +21,6 @@
 # deployParameters:  # Defines the Cloud Run target parameters
 #   location: asia-south1
 #   service: crn-visitor-connect-prod-as1-node-admin
-
-apiVersion: deploy.cloud.google.com/v1
-kind: Target
-metadata:
-  name: prod
-description: Cloud Run production service
-run:
-  location: projects/prj-visitor-connect-prod-goa/locations/asia-south1
-  serviceName: crn-visitor-connect-prod-as1-node-admi  
-  project: prj-visitor-connect-prod-goa
-
 
 # ---
 # apiVersion: deploy.cloud.google.com/v1
