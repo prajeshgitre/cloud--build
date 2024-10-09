@@ -52,7 +52,6 @@ steps:
                 "--network=vpc-visitor-connect-prod-goa-01",
                 "--subnet=sb-prod-as1-cr-01",
                 "--session-affinity"
-                "--service=crn-visitor-connect-prod-as1-node-admin"
               ]
         EOF
 
