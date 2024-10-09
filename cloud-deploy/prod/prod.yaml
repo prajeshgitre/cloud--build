@@ -7,19 +7,16 @@ spec:
     metadata:
       annotations:
         autoscaling.knative.dev/maxScale: "1"
-        serving.knative.dev/allow-unauthenticated: "false"  
     spec:
       containers:
       - name: node-app
         image: asia-south1-docker.pkg.dev/prj-visitor-connect-prod-goa/repo-visitor-connect-prod-as1-01/node-app:latest
         ports:
-        - containerPort: 8080  # Updated port
+        - containerPort:  80
         resources:
           limits:
-            cpu: "4000m"  
-            memory: 8Gi    
-        
-      serviceAccountName: sa-cloudrun@prj-visitor-connect-prod-goa.iam.gserviceaccount.com 
+            cpu: 1000m
+            memory: 128Mi
  
   
  
