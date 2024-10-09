@@ -5,7 +5,7 @@ metadata:
 description: Cloud Run production service
 run:
   location: asia-south1
-  serviceName: crn-visitor-connect-prod-as1-node-admin
+  service: crn-visitor-connect-prod-as1-node-admin
   
 
 
