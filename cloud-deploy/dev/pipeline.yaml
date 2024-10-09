@@ -2,8 +2,12 @@ apiVersion: deploy.cloud.google.com/v1
 kind: DeliveryPipeline
 metadata:
   name: cdep-visitor-connect-prod-as1-01
-description: Main application pipeline
+description: Pipeline for deploying Cloud Run to production
 serialPipeline:
   stages:
-    - targetId: prod  
-      profiles: ["prod"]  
+    - targetId: prod
+      profiles: ["prod"]
+      strategy:
+        standard:
+          verify: true  
+
