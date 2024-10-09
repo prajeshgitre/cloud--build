@@ -1,26 +1,23 @@
 apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
-  name: crn-visitor-connect-prod-as1-node-admin  
+  name: prod
 spec:
   template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/maxScale: "1"
     spec:
       containers:
-        - image: asia-south1-docker.pkg.dev/prj-visitor-connect-prod-goa/repo-visitor-connect-prod-as1-01/node-app:latest
-          ports:
-            - containerPort: 80
+      - name: myapp
+        image: asia-south1-docker.pkg.dev/prj-visitor-connect-prod-goa/repo-visitor-connect-prod-as1-01/node-app:latest
+        ports:
+        - containerPort:  80
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 128Mi
 
-# apiVersion: serving.knative.dev/v1
-# kind: Service
-# metadata:
-#   name: node-app
-# spec:
-#   template:
-#     spec:
-#       containers:
-#         - image: asia-south1-docker.pkg.dev/prj-visitor-connect-prod-goa/repo-visitor-connect-prod-as1-01/node-app:latest
-#           ports:
-#             - containerPort: 80
 
 
 # apiVersion: serving.knative.dev/v1
