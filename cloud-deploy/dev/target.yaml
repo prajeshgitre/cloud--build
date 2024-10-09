@@ -1,33 +1,26 @@
 apiVersion: deploy.cloud.google.com/v1
 kind: Target
 metadata:
+  name: dev
+description: Cloud Run development service
+run:
+  location: projects/prj-visitor-connect-prod-goa/locations/asia-south1
+
+---
+apiVersion: deploy.cloud.google.com/v1
+kind: Target
+metadata:
   name: prod
 description: Cloud Run development service
 run:
   location: projects/prj-visitor-connect-prod-goa/locations/asia-south1
-  
-
 
 # apiVersion: deploy.cloud.google.com/v1
 # kind: Target
 # metadata:
 #   name: prod
-#   description: Cloud Run target for prod environment
-# executionConfigs:
-#   - serviceAccount: "sa-cloudbuild@prj-visitor-connect-prod-goa.iam.gserviceaccount.com"
-#     usages:  
-#       - RENDER
-#       - DEPLOY
-# deployParameters:  # Defines the Cloud Run target parameters
-#   location: asia-south1
-#   service: crn-visitor-connect-prod-as1-node-admin
-
-# ---
-# apiVersion: deploy.cloud.google.com/v1
-# kind: Target
-# metadata:
-#   name: dev
 # description: Cloud Run development service
 # run:
-#   location: projects/infra-samruddh-bharat-poc-01/locations/asia-south1
+#   location: projects/prj-visitor-connect-prod-goa/locations/asia-south1
+  
   
