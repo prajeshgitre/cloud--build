@@ -46,6 +46,7 @@ steps:
 
         gcloud deploy releases create node-app-${SHORT_SHA}-$(date +%s) \
                             --delivery-pipeline=cdep-visitor-connect-prod-as1-01 \
+                            --region=asia-south1
                         
 
   # Step to wait for 60 seconds
