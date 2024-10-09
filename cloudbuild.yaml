@@ -32,10 +32,6 @@ steps:
         metadata:
           name: node-app
         profiles:
-        - name: dev
-          manifests:
-            rawYaml:
-            - cloud-deploy/dev/dev.yaml
         - name: prod
           manifests:
             rawYaml:
@@ -63,7 +59,7 @@ steps:
       - -xe
       - -c
       - |
-        profile="dev"
+        profile="prod"
         url=$(gcloud run services describe "$profile" --platform managed --region asia-south1 --format 'value(status.url)')
 
         # Use curl to get the HTTP response code
