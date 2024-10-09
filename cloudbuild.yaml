@@ -44,46 +44,46 @@ steps:
                             --delivery-pipeline=cdep-visitor-connect-prod-as1-01 \
                            
 
-  # Step to wait for 60 seconds
-  - name: 'alpine:latest'
-    entrypoint: 'sh'
-    args:
-      - '-c'
-      - 'sleep 60'
+  # # Step to wait for 60 seconds
+  # - name: 'alpine:latest'
+  #   entrypoint: 'sh'
+  #   args:
+  #     - '-c'
+  #     - 'sleep 60'
 
-  # Step 4: Check the status of the deployed service
-  - name: 'google/cloud-sdk:latest'
-    entrypoint: 'sh'
-    args:
-      - -xe
-      - -c
-      - |
-        profile="prod"  
-        url=$(gcloud run services describe "$profile" --platform managed --region asia-south1 --format 'value(status.url)')
+  # # Step 4: Check the status of the deployed service
+  # - name: 'google/cloud-sdk:latest'
+  #   entrypoint: 'sh'
+  #   args:
+  #     - -xe
+  #     - -c
+  #     - |
+  #       profile="prod"  
+  #       url=$(gcloud run services describe "$profile" --platform managed --region asia-south1 --format 'value(status.url)')
 
-        # Use curl to get the HTTP response code
-        response=$(curl -o /dev/null -s -w "%{http_code}\n" "$url")
+  #       # Use curl to get the HTTP response code
+  #       response=$(curl -o /dev/null -s -w "%{http_code}\n" "$url")
 
-        # Check the status code and take action
-        if [ "$response" -eq 200 ]; then
-          echo "Deployment successful! Service is healthy."
-        elif [ "$response" -eq 500 ]; then
-          echo "Deployment failed with status 500! Rolling back..."
+  #       # Check the status code and take action
+  #       if [ "$response" -eq 200 ]; then
+  #         echo "Deployment successful! Service is healthy."
+  #       elif [ "$response" -eq 500 ]; then
+  #         echo "Deployment failed with status 500! Rolling back..."
 
-          last_release=$(gcloud deploy releases list \
-            --delivery-pipeline=cdep-visitor-connect-prod-as1-01 \
-            --region=asia-south1 \
-            --format="yaml(name)" | awk -F'/' '{split($0,a,"/"); print a[length(a)]}')
+  #         last_release=$(gcloud deploy releases list \
+  #           --delivery-pipeline=cdep-visitor-connect-prod-as1-01 \
+  #           --region=asia-south1 \
+  #           --format="yaml(name)" | awk -F'/' '{split($0,a,"/"); print a[length(a)]}')
 
-          # Rollback to the last successful release
-          gcloud deploy targets rollback prod \
-            --delivery-pipeline=cdep-visitor-connect-prod-as1-01 \
-            --region="asia-south1" \
-            --release="$last_release"
-        else
-          echo "Deployment failed with status $response! Exiting."
-          exit 1
-        fi
+  #         # Rollback to the last successful release
+  #         gcloud deploy targets rollback prod \
+  #           --delivery-pipeline=cdep-visitor-connect-prod-as1-01 \
+  #           --region="asia-south1" \
+  #           --release="$last_release"
+  #       else
+  #         echo "Deployment failed with status $response! Exiting."
+  #         exit 1
+  #       fi
 
 images:
   - 'asia-south1-docker.pkg.dev/prj-visitor-connect-prod-goa/repo-visitor-connect-prod-as1-01/node-app:latest'
