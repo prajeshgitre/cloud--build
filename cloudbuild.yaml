@@ -41,6 +41,8 @@ steps:
           --session-affinity \
           --region=asia-south1 \
           --project=prj-visitor-connect-prod-goa
+          --cpu=4 \
+          --memory=8Gi
 
         # Create a new Cloud Deploy release
         gcloud deploy releases create node-app-${SHORT_SHA}-$(date +%s) \
