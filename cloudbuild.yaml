@@ -40,7 +40,7 @@ steps:
           --use-http2 \
           --session-affinity \
           --region=asia-south1 \
-          --project=prj-visitor-connect-prod-goa
+          --project=prj-visitor-connect-prod-goa \
           --cpu=4 \
           --memory=8Gi
 
