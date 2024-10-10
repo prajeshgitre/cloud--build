@@ -18,6 +18,10 @@ spec:
             cpu: "4000m"
             memory: 8Gi
       serviceAccountName: sa-cloudrun@prj-visitor-connect-prod-goa.iam.gserviceaccount.com
+      vpcAccess:
+        enabled: true
+        vpc: projects/prj-visitor-connect-prod-goa/locations/asia-south1/networks/vpc-visitor-connect-prod-goa-01
+        subnet: projects/prj-visitor-connect-prod-goa/locations/asia-south1/subnetworks/sb-prod-as1-cr-01
     
 #       vpcAccess:
 #         connector: projects/prj-visitor-connect-prod-goa/locations/asia-south1/connectors/vpc-visitor-connect-prod-goa-01
