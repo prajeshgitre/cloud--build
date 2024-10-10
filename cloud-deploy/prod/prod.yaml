@@ -19,19 +19,32 @@
 #             memory: 8Gi
 #       serviceAccountName: sa-cloudrun@prj-visitor-connect-prod-goa.iam.gserviceaccount.com
 
-# Deploy the Cloud Run service using the gcloud command (instead of Skaffold)
-        gcloud beta run deploy crn-visitor-connect-prod-as1-node-admin \
-          --image=asia-south1-docker.pkg.dev/prj-visitor-connect-prod-goa/repo-visitor-connect-prod-as1-01/node-app:latest \
-          --no-allow-unauthenticated \
-          --port=80 \
-          --service-account=sa-cloudrun@prj-visitor-connect-prod-goa.iam.gserviceaccount.com \
-          --network=vpc-visitor-connect-prod-goa-01 \
-          --subnet=sb-prod-as1-cr-01 \
-          --vpc-egress=private-ranges-only \
-          --use-http2 \
-          --session-affinity \
-          --region=asia-south1 \
-          --project=prj-visitor-connect-prod-goa
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: crn-visitor-connect-prod-as1-node-admin
+  namespace: default
+  annotations:
+    run.googleapis.com/ingress: internal
+    run.googleapis.com/port: "80"
+    run.googleapis.com/session-affinity: "enabled"
+    run.googleapis.com/network: vpc-visitor-connect-prod-goa-01
+    run.googleapis.com/vpc-access-egress: "private-ranges-only"
+    run.googleapis.com/subnet: sb-prod-as1-cr-01  
+    run.googleapis.com/http2: "enabled"
+spec:
+  template:
+    spec:
+      containers:
+        - image: asia-south1-docker.pkg.dev/prj-visitor-connect-prod-goa/repo-visitor-connect-prod-as1-01/node-app:latest
+          ports:
+            - containerPort: 80
+          env: []  # Add environment variables if required
+      serviceAccountName: sa-cloudrun@prj-visitor-connect-prod-goa.iam.gserviceaccount.com
+      timeoutSeconds: 300
+  traffic:
+    - latestRevision: true
+      percent: 100
 
   
   
