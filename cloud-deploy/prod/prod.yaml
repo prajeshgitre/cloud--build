@@ -12,7 +12,7 @@ spec:
       - name: node-app
         image: asia-south1-docker.pkg.dev/prj-visitor-connect-prod-goa/repo-visitor-connect-prod-as1-01/node-app:latest
         ports:
-        - - name: http2
+        - name: http2
         - containerPort: 80
         resources:
           limits:
