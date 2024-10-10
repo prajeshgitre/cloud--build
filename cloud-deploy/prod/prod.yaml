@@ -2,6 +2,8 @@ apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
   name: crn-visitor-connect-prod-as1-node-admin
+  labels:
+      cloud.googleapis.com/location: asia-south1
 spec:
   template:
     metadata:
