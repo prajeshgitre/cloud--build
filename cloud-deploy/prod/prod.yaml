@@ -8,7 +8,7 @@ spec:
   template:
     metadata:
       annotations:
-        run.googleapis.com/network-interfaces: '[{"network":"vpc-visitor-connect-prod-goa-01","subnetwork":"sb-prod-as1-cr-01"]'
+        run.googleapis.com/network-interfaces: '[{"network":"vpc-visitor-connect-prod-goa-01","subnetwork":"sb-prod-as1-cr-01"}]'
         run.googleapis.com/vpc-access-egress: private-ranges-only
         autoscaling.knative.dev/maxScale: "1"
     spec:
