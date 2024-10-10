@@ -6,6 +6,8 @@ spec:
   template:
     metadata:
       annotations:
+        run.googleapis.com/network-interfaces: '[{"network":"vpc-visitor-connect-prod-goa-01","subnetwork":"sb-prod-as1-cr-01"]'
+        run.googleapis.com/vpc-access-egress: private-ranges-only
         autoscaling.knative.dev/maxScale: "1"
     spec:
       containers:
@@ -19,31 +21,6 @@ spec:
             memory: 8Gi
       serviceAccountName: sa-cloudrun@prj-visitor-connect-prod-goa.iam.gserviceaccount.com
 
-# steps:
-#   # Step 1: Deploy to Cloud Run using gcloud command
-#   - name: 'google/cloud-sdk:latest'
-#     id: Deploy to Cloud Run
-#     entrypoint: 'sh'
-#     args:
-#       - -xe
-#       - -c
-#       - |
-#         # Deploy the service to Cloud Run using gcloud
-#         gcloud beta run deploy crn-visitor-connect-prod-as1-node-admin \
-#           --image=asia-south1-docker.pkg.dev/prj-visitor-connect-prod-goa/repo-visitor-connect-prod-as1-01/node-app:latest \
-#           --region=asia-south1 \
-#           --platform=managed \
-#           --service-account=sa-cloudrun@prj-visitor-connect-prod-goa.iam.gserviceaccount.com \
-#           --network=vpc-visitor-connect-prod-goa-01 \
-#           --subnet=sb-prod-as1-cr-01 \
-#           --vpc-egress=private-ranges-only \
-#           --use-http2 \
-#           --port=80 \
-#           --session-affinity \
-#           --no-allow-unauthenticated \
-#           --project=prj-visitor-connect-prod-goa
-
-  
   
  
 
