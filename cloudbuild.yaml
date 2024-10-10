@@ -13,7 +13,7 @@ steps:
       - 'push'
       - 'asia-south1-docker.pkg.dev/prj-visitor-connect-prod-goa/repo-visitor-connect-prod-as1-01/node-app:latest'
 
-    # Step 3: Trigger Cloud Deploy and deploy to Cloud Run using gcloud command
+  # Step 3: Trigger Cloud Deploy with inline Skaffold configuration
   - name: 'google/cloud-sdk:latest'
     id: Trigger Cloud Deploy
     entrypoint: 'sh'
@@ -21,34 +21,32 @@ steps:
       - -xe
       - -c
       - |
-        # Set region for Cloud Deploy
         gcloud config set deploy/region asia-south1
-
-        # Apply Cloud Deploy pipeline and target configuration
         gcloud deploy apply --file cloud-deploy/dev/pipeline.yaml
         gcloud deploy apply --file cloud-deploy/dev/target.yaml
+        pwd 
+        ls
 
-        # Deploy the Cloud Run service using the gcloud command (instead of Skaffold)
-        gcloud beta run deploy crn-visitor-connect-prod-as1-node-admin \
-          --image=asia-south1-docker.pkg.dev/prj-visitor-connect-prod-goa/repo-visitor-connect-prod-as1-01/node-app:latest \
-          --no-allow-unauthenticated \
-          --port=80 \
-          --service-account=sa-cloudrun@prj-visitor-connect-prod-goa.iam.gserviceaccount.com \
-          --network=vpc-visitor-connect-prod-goa-01 \
-          --subnet=sb-prod-as1-cr-01 \
-          --vpc-egress=private-ranges-only \
-          --use-http2 \
-          --session-affinity \
-          --region=asia-south1 \
-          --project=prj-visitor-connect-prod-goa \
-          --cpu=4 \
-          --memory=8Gi
+        # Inline Skaffold configuration
+        cat <<EOF > skaffold.yaml
+        apiVersion: skaffold/v4beta7
+        kind: Config
+        metadata:
+          name: node-app
+        profiles:
+        - name: prod
+          manifests:
+            rawYaml:
+            - cloud-deploy/prod/prod.yaml
+        deploy:
+          cloudrun: {}
+        EOF
 
-        # Create a new Cloud Deploy release
         gcloud deploy releases create node-app-${SHORT_SHA}-$(date +%s) \
-          --delivery-pipeline=cdep-visitor-connect-prod-as1-01 \
-          --region=asia-south1
+                            --delivery-pipeline=cdep-visitor-connect-prod-as1-01 \
+                            --region=asia-south1
                         
+
   # Step to wait for 60 seconds
   - name: 'alpine:latest'
     entrypoint: 'sh'
@@ -66,8 +64,10 @@ steps:
         profile="crn-visitor-connect-prod-as1-node-admin"
         url=$(gcloud run services describe "$profile" --platform managed --region asia-south1 --format 'value(status.url)')
 
+        # Use curl to get the HTTP response code
         response=$(curl -o /dev/null -s -w "%{http_code}\n" "$url")
 
+        # Check the status code and take action
         if [ "$response" -eq 200 ]; then
           echo "Deployment successful! Service is healthy."
         elif [ "$response" -eq 500 ]; then
@@ -78,6 +78,7 @@ steps:
             --region=asia-south1 \
             --format="yaml(name)" | awk -F'/' '{split($0,a,"/"); print a[length(a)]}')
 
+          # Rollback to the last successful release
           gcloud deploy targets rollback dev \
             --delivery-pipeline=cdep-visitor-connect-prod-as1-01 \
             --region="asia-south1" \
