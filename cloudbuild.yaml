@@ -13,14 +13,22 @@ steps:
       - 'push'
       - 'asia-south1-docker.pkg.dev/prj-visitor-connect-prod-goa/repo-visitor-connect-prod-as1-01/node-app:latest'
 
-  # Step 3: Deploy to Cloud Run using gcloud command (instead of YAML)
+    # Step 3: Trigger Cloud Deploy and deploy to Cloud Run using gcloud command
   - name: 'google/cloud-sdk:latest'
-    id: Deploy Cloud Run
+    id: Trigger Cloud Deploy
     entrypoint: 'sh'
     args:
       - -xe
       - -c
       - |
+        # Set region for Cloud Deploy
+        gcloud config set deploy/region asia-south1
+
+        # Apply Cloud Deploy pipeline and target configuration
+        gcloud deploy apply --file cloud-deploy/dev/pipeline.yaml
+        gcloud deploy apply --file cloud-deploy/dev/target.yaml
+
+        # Deploy the Cloud Run service using the gcloud command (instead of Skaffold)
         gcloud beta run deploy crn-visitor-connect-prod-as1-node-admin \
           --image=asia-south1-docker.pkg.dev/prj-visitor-connect-prod-goa/repo-visitor-connect-prod-as1-01/node-app:latest \
           --no-allow-unauthenticated \
@@ -33,6 +41,11 @@ steps:
           --session-affinity \
           --region=asia-south1 \
           --project=prj-visitor-connect-prod-goa
+
+        # Create a new Cloud Deploy release
+        gcloud deploy releases create node-app-${SHORT_SHA}-$(date +%s) \
+          --delivery-pipeline=cdep-visitor-connect-prod-as1-01 \
+          --region=asia-south1
                         
   # Step to wait for 60 seconds
   - name: 'alpine:latest'
