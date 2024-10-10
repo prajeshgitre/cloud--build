@@ -1,27 +1,38 @@
-apiVersion: serving.knative.dev/v1
-kind: Service
-metadata:
-  name: crn-visitor-connect-prod-as1-node-admin
-spec:
-  template:
-    metadata:
-      annotations:
-        autoscaling.knative.dev/maxScale: "1"
-    spec:
-      containers:
-      - name: node-app
-        image: asia-south1-docker.pkg.dev/prj-visitor-connect-prod-goa/repo-visitor-connect-prod-as1-01/node-app:latest
-        ports:
-        - containerPort: 80
-        resources:
-          limits:
-            cpu: "4000m"
-            memory: 8Gi
-      serviceAccountName: sa-cloudrun@prj-visitor-connect-prod-goa.iam.gserviceaccount.com
-      # vpcAccess:
-      #   enabled: true
-      #   vpc: projects/prj-visitor-connect-prod-goa/locations/asia-south1/networks/vpc-visitor-connect-prod-goa-01
-      #   subnet: projects/prj-visitor-connect-prod-goa/locations/asia-south1/subnetworks/sb-prod-as1-cr-01
+# apiVersion: serving.knative.dev/v1
+# kind: Service
+# metadata:
+#   name: crn-visitor-connect-prod-as1-node-admin
+# spec:
+#   template:
+#     metadata:
+#       annotations:
+#         autoscaling.knative.dev/maxScale: "1"
+#     spec:
+#       containers:
+#       - name: node-app
+#         image: asia-south1-docker.pkg.dev/prj-visitor-connect-prod-goa/repo-visitor-connect-prod-as1-01/node-app:latest
+#         ports:
+#         - containerPort: 80
+#         resources:
+#           limits:
+#             cpu: "4000m"
+#             memory: 8Gi
+#       serviceAccountName: sa-cloudrun@prj-visitor-connect-prod-goa.iam.gserviceaccount.com
+
+# Deploy the Cloud Run service using the gcloud command (instead of Skaffold)
+        gcloud beta run deploy crn-visitor-connect-prod-as1-node-admin \
+          --image=asia-south1-docker.pkg.dev/prj-visitor-connect-prod-goa/repo-visitor-connect-prod-as1-01/node-app:latest \
+          --no-allow-unauthenticated \
+          --port=80 \
+          --service-account=sa-cloudrun@prj-visitor-connect-prod-goa.iam.gserviceaccount.com \
+          --network=vpc-visitor-connect-prod-goa-01 \
+          --subnet=sb-prod-as1-cr-01 \
+          --vpc-egress=private-ranges-only \
+          --use-http2 \
+          --session-affinity \
+          --region=asia-south1 \
+          --project=prj-visitor-connect-prod-goa
+
   
   
  
