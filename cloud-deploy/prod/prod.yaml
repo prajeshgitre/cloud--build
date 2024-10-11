@@ -1,33 +1,28 @@
 apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
-   annotations:
-     run.googleapis.com/network-interfaces: '[{"network":"vpc-visitor-connect-prod-goa-01","subnetwork":"sb-prod-as1-cr-01"}]'
-     run.googleapis.com/vpc-access-egress: private-ranges-only
-     run.googleapis.com/ingress: internal-and-cloud-load-balancing
-  
-   name: crn-visitor-connect-prod-as1-node
-   labels:
-      cloud.googleapis.com/location: asia-south1
+  name: crn-visitor-connect-prod-as1-node-admin
+  labels:
+    cloud.googleapis.com/location: asia-south1
+  annotations:
+    run.googleapis.com/ingress: internal-and-cloud-load-balancing
 spec:
   template:
     metadata:
-       autoscaling.knative.dev/maxScale: "1"
+      annotations:
+        autoscaling.knative.dev/maxScale: '1'
+        run.googleapis.com/sessionAffinity: 'true'
+        run.googleapis.com/vpc-access-egress: private-ranges-only
+        run.googleapis.com/network-interfaces: '[{"network":"vpc-visitor-connect-prod-goa-01","subnetwork":"sb-prod-as1-cr-01"}]'
     spec:
+      serviceAccountName: sa-cloudrun@prj-visitor-connect-prod-goa.iam.gserviceaccount.com
       containers:
-      - name: node-app
-        image: asia-south1-docker.pkg.dev/prj-visitor-connect-prod-goa/repo-visitor-connect-prod-as1-01/node-app:latest
+      - image: asia-south1-docker.pkg.dev/prj-visitor-connect-prod-goa/repo-visitor-connect-prod-as1-01/node-app:latest
+        name: node-app
         ports:
-        - containerPort: 80
+        - name: http
+          containerPort: 80
         resources:
           limits:
-            cpu: "4000m"
-            memory: 8Gi
-      serviceAccountName: sa-cloudrun@prj-visitor-connect-prod-goa.iam.gserviceaccount.com
-
-  
- 
-
-
-
-
+            cpu: 4000m
+            memory: '8Gi'
