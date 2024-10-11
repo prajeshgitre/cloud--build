@@ -6,8 +6,8 @@ metadata:
      run.googleapis.com/vpc-access-egress: private-ranges-only
      run.googleapis.com/ingress: internal-and-cloud-load-balancing
   
-  name: crn-visitor-connect-prod-as1-node
-  labels:
+   name: crn-visitor-connect-prod-as1-node
+   labels:
       cloud.googleapis.com/location: asia-south1
 spec:
   template:
