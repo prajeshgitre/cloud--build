@@ -61,8 +61,10 @@ steps:
       - -xe
       - -c
       - |
-        profile="crn-visitor-connect-prod-as1-node-admin"
-        url=$(gcloud run services describe "$profile" --platform managed --region asia-south1 --format 'value(status.url)')
+        lb_ip="34.149.45.148"  # Add your Load Balancer IP here
+      
+      # Use curl to get the HTTP response code
+      response=$(curl -o /dev/null -s -w "%{http_code}\n" "http://$lb_ip")
 
         # Use curl to get the HTTP response code
         response=$(curl -o /dev/null -s -w "%{http_code}\n" "$url")
