@@ -27,22 +27,23 @@ steps:
 
         # Inline Skaffold configuration
         cat <<EOF > skaffold.yaml
-        apiVersion: skaffold/v4beta7
-        kind: Config
-        metadata:
-          name: node-app
-        profiles:
-        - name: prod
-          manifests:
-            rawYaml:
-            - cloud-deploy/prod/prod.yaml
-        deploy:
-          cloudrun: {}
-        EOF
+apiVersion: skaffold/v4beta7
+kind: Config
+metadata:
+  name: node-app
+profiles:
+- name: prod
+  manifests:
+    rawYaml:
+    - cloud-deploy/prod/prod.yaml
+deploy:
+  cloudrun: {}
+EOF
 
-        gcloud deploy releases create node-app-${SHORT_SHA} \
-                            --delivery-pipeline=cdep-visitor-connect-prod-as1-01 \
-                        
+        # Include region argument for release creation
+        gcloud deploy releases create node-app-${SHORT_SHA}-$(date +%s) \
+          --delivery-pipeline=cdep-visitor-connect-prod-as1-01 \
+          --region=asia-south1
 
   # Step to wait for 60 seconds
   - name: 'alpine:latest'
@@ -58,12 +59,8 @@ steps:
       - -xe
       - -c
       - |
-        lb_ip="34.149.45.148"
+        lb_ip="34.149.45.148"  # Add your Load Balancer IP here
         response=$(curl -o /dev/null -s -w "%{http_code}\n" "http://$lb_ip")
-        # url=$(gcloud run services describe "$profile" --platform managed --region asia-south1 --format 'value(status.url)')
-
-        # # Use curl to get the HTTP response code
-        # response=$(curl -o /dev/null -s -w "%{http_code}\n" "$url")
 
         # Check the status code and take action
         if [ "$response" -eq 200 ]; then
@@ -71,23 +68,22 @@ steps:
         elif [ "$response" -eq 500 ]; then
           echo "Deployment failed with status 500! Rolling back..."
 
+          # List and capture the last release name correctly
           last_release=$(gcloud deploy releases list \
             --delivery-pipeline=cdep-visitor-connect-prod-as1-01 \
             --region=asia-south1 \
-            --format="yaml(name)" | awk -F'/' '{split($0,a,"/"); print a[length(a)]}')
+            --format="value(name)" | tail -n 1)
 
           # Rollback to the last successful release
           gcloud deploy targets rollback dev \
             --delivery-pipeline=cdep-visitor-connect-prod-as1-01 \
-            --region="asia-south1" \
+            --region=asia-south1 \
             --release="$last_release"
         else
           echo "Deployment failed with status $response! Exiting."
           exit 1
-        fi
 
 images:
   - 'asia-south1-docker.pkg.dev/prj-visitor-connect-prod-goa/repo-visitor-connect-prod-as1-01/node-app:latest'
 
 logsBucket: 'gs://bkt-visitor-connect-prod-as1-cloudbuild-01'
-
