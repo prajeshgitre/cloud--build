@@ -80,6 +80,7 @@ steps:
         else
           echo "Deployment failed with status $response! Exiting."
           exit 1
+        fi
 
 images:
   - 'asia-south1-docker.pkg.dev/prj-visitor-connect-prod-goa/repo-visitor-connect-prod-as1-01/node-app:latest'
