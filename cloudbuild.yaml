@@ -73,7 +73,7 @@ steps:
             --format="value(name)" | tail -n 1)
 
           # Rollback to the last successful release
-          gcloud deploy targets rollback dev \
+          gcloud deploy targets rollback prod \
             --delivery-pipeline=cdep-visitor-connect-prod-as1-01 \
             --region=asia-south1 \
             --release="$last_release"
