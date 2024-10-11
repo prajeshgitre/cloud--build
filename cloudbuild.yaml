@@ -27,22 +27,22 @@ steps:
 
         # Inline Skaffold configuration
         cat <<EOF > skaffold.yaml
-apiVersion: skaffold/v4beta7
-kind: Config
-metadata:
-  name: node-app
-profiles:
-- name: prod
-  manifests:
-    rawYaml:
-    - cloud-deploy/prod/prod.yaml
-deploy:
-  cloudrun: {}
-EOF
+        apiVersion: skaffold/v4beta7
+        kind: Config
+        metadata:
+          name: node-app
+        profiles:
+        - name: prod
+          manifests:
+            rawYaml:
+            - cloud-deploy/prod/prod.yaml
+        deploy:
+          cloudrun: {}
+        EOF
 
-        gcloud deploy releases create node-app-${SHORT_SHA}-$(date +%s) \
-          --delivery-pipeline=cdep-visitor-connect-prod-as1-01 \
-          --region=asia-south1
+        gcloud deploy releases create node-app-${SHORT_SHA} \
+                            --delivery-pipeline=cdep-visitor-connect-prod-as1-01 \
+                        
 
   # Step to wait for 60 seconds
   - name: 'alpine:latest'
