@@ -58,11 +58,12 @@ steps:
       - -xe
       - -c
       - |
-        profile="prod"
-        url=$(gcloud run services describe "$profile" --platform managed --region asia-south1 --format 'value(status.url)')
+        lb_ip="34.149.45.148"
+        response=$(curl -o /dev/null -s -w "%{http_code}\n" "http://$lb_ip")
+        # url=$(gcloud run services describe "$profile" --platform managed --region asia-south1 --format 'value(status.url)')
 
-        # Use curl to get the HTTP response code
-        response=$(curl -o /dev/null -s -w "%{http_code}\n" "$url")
+        # # Use curl to get the HTTP response code
+        # response=$(curl -o /dev/null -s -w "%{http_code}\n" "$url")
 
         # Check the status code and take action
         if [ "$response" -eq 200 ]; then
