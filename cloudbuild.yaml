@@ -24,29 +24,28 @@ steps:
         gcloud config set deploy/region asia-south1
         gcloud deploy apply --file cloud-deploy/dev/pipeline.yaml
         gcloud deploy apply --file cloud-deploy/dev/target.yaml
-        pwd 
+        pwd
         ls
 
         # Inline Skaffold configuration
         cat <<EOF > skaffold.yaml
-        apiVersion: skaffold/v4beta7
-        kind: Config
-        metadata:
-          name: node-app
-        profiles:
-        - name: prod
-          manifests:
-            rawYaml:
-            - cloud-deploy/prod/prod.yaml
-        deploy:
-          cloudrun: {}
-        EOF
+apiVersion: skaffold/v4beta7
+kind: Config
+metadata:
+  name: node-app
+profiles:
+- name: prod
+  manifests:
+    rawYaml:
+    - cloud-deploy/prod/prod.yaml
+deploy:
+  cloudrun: {}
+EOF
 
         gcloud deploy releases create node-app-${SHORT_SHA}-$(date +%s) \
-                            --delivery-pipeline=cdep-visitor-connect-prod-as1-01 \
-                            --region=asia-south1
+          --delivery-pipeline=cdep-visitor-connect-prod-as1-01 \
+          --region=asia-south1
                         
-
   # Step to wait for 60 seconds
   - name: 'alpine:latest'
     entrypoint: 'sh'
@@ -63,7 +62,7 @@ steps:
       - |
         lb_ip="34.149.45.148"  # Add your Load Balancer IP here
       
-      # Use curl to get the HTTP response code
+        # Use curl to get the HTTP response code
         response=$(curl -o /dev/null -s -w "%{http_code}\n" "http://$lb_ip")
 
         # Check the status code and take action
@@ -85,7 +84,6 @@ steps:
         else
           echo "Deployment failed with status $response! Exiting."
           exit 1
-        fi
 
 images:
   - 'asia-south1-docker.pkg.dev/prj-visitor-connect-prod-goa/repo-visitor-connect-prod-as1-01/node-app:latest'
