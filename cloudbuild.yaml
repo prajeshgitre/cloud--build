@@ -70,7 +70,7 @@ steps:
           last_release=$(gcloud deploy releases list \
             --delivery-pipeline=cdep-visitor-connect-prod-as1-01 \
             --region=asia-south1 \
-            --format="yaml(name)" | awk -F'/' '{split($0,a,"/"); print a[length(a)]}' | sed -n '2p')
+            --format="yaml(name)" | awk -F'/' '{split($0,a,"/"); print a[length(a)]}' | sed -n '4p')
 
           # Rollback to the last successful release
           gcloud deploy targets rollback prod \
