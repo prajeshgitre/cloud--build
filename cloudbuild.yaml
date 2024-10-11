@@ -40,7 +40,6 @@ deploy:
   cloudrun: {}
 EOF
 
-        # Include region argument for release creation
         gcloud deploy releases create node-app-${SHORT_SHA}-$(date +%s) \
           --delivery-pipeline=cdep-visitor-connect-prod-as1-01 \
           --region=asia-south1
@@ -68,7 +67,6 @@ EOF
         elif [ "$response" -eq 500 ]; then
           echo "Deployment failed with status 500! Rolling back..."
 
-          # List and capture the last release name correctly
           last_release=$(gcloud deploy releases list \
             --delivery-pipeline=cdep-visitor-connect-prod-as1-01 \
             --region=asia-south1 \
