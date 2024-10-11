@@ -24,4 +24,4 @@ spec:
         resources:
           limits:
             cpu: 4000m
-            memory: '8Gi'
+            memory: 8Gi
