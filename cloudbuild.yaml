@@ -61,7 +61,7 @@ steps:
       - -xe
       - -c
       - |
-        profile="crn-visitor-connect-prod-as1-node"
+        profile="crn-visitor-connect-prod-as1-node-admin"
         url=$(gcloud run services describe "$profile" --platform managed --region asia-south1 --format 'value(status.url)')
 
         # Use curl to get the HTTP response code
