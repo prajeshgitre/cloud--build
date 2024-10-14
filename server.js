@@ -4,7 +4,7 @@ var port = 80
 
 var server = http.createServer(function (request, response) {
   response.writeHead(500, {'Content-Type': 'text/plain'})
-  response.end('Hello World...bye..\n')
+  response.end('Hello World...bye..bye..\n')
 })
 
 server.listen(port)
