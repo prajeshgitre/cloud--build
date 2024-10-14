@@ -85,4 +85,4 @@ steps:
 images:
   - 'asia-south2-docker.pkg.dev/prj-visitor-connect-prod-goa/repo-visitor-connect-prod-as2-01/node-app:latest'
 
-logsBucket: 'gs://bkt-visitor-connect-prod-as1-cloudbuild-01'
+logsBucket: 'gs://bkt-visitor-connect-prod-as1-cloudbuild-logging'
