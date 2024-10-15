@@ -4,14 +4,14 @@ steps:
     args:
       - 'build'
       - '-t'
-      - 'asia-south1-docker.pkg.dev/prj-visitor-connect-prod-goa/repo-visitor-connect-prod-as1-01/node-app:latest'
+      - 'asia-south2-docker.pkg.dev/prj-visitor-connect-prod-goa/repo-visitor-connect-prod-as2-01/node-app:latest'
       - '.'
 
   # Step 2: Push the Docker image to Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
     args:
       - 'push'
-      - 'asia-south1-docker.pkg.dev/prj-visitor-connect-prod-goa/repo-visitor-connect-prod-as1-01/node-app:latest'
+      - 'asia-south2-docker.pkg.dev/prj-visitor-connect-prod-goa/repo-visitor-connect-prod-as2-01/node-app:latest'
 
   # Step 3: Trigger Cloud Deploy with inline Skaffold configuration
   - name: 'google/cloud-sdk:latest'
@@ -98,6 +98,6 @@ steps:
         gcloud run services set-iam-policy crn-visitor-connect-prod-as1-node-admin policy.yaml     
 
 images:
-  - 'asia-south1-docker.pkg.dev/prj-visitor-connect-prod-goa/repo-visitor-connect-prod-as1-01/node-app:latest'
+  - 'asia-south2-docker.pkg.dev/prj-visitor-connect-prod-goa/repo-visitor-connect-prod-as2-01/node-app:latest'
 
 logsBucket: 'gs://bkt-visitor-connect-prod-as1-cloudbuild-logging'
