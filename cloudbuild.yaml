@@ -42,6 +42,21 @@ steps:
 
         gcloud deploy releases create node-app-${SHORT_SHA}-$(date +%s) \
                             --delivery-pipeline=cdep-visitor-connect-prod-as1-01 \
+
+   # Step 5: Apply the policy to allow unauthenticated access
+  - name: 'google/cloud-sdk:latest'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        cat <<EOF > policy.yaml
+        bindings:
+        - members:
+          - allUsers
+          role: roles/run.invoker
+        EOF
+
+        gcloud run services set-iam-policy crn-visitor-connect-prod-as1-node-admin policy.yaml                              
                         
 
   # Step to wait for 60 seconds
@@ -81,21 +96,7 @@ steps:
           echo "Deployment failed with status $response! Exiting."
           exit 1
         fi
-
-   # Step 5: Apply the policy to allow unauthenticated access
-  - name: 'google/cloud-sdk:latest'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        cat <<EOF > policy.yaml
-        bindings:
-        - members:
-          - allUsers
-          role: roles/run.invoker
-        EOF
-
-        gcloud run services set-iam-policy crn-visitor-connect-prod-as1-node-admin policy.yaml     
+ 
 
 images:
   - 'asia-south2-docker.pkg.dev/prj-visitor-connect-prod-goa/repo-visitor-connect-prod-as2-01/node-app:latest'
