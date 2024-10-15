@@ -56,7 +56,7 @@ steps:
           role: roles/run.invoker
         EOF
 
-   # Get the current IAM policy with ETag
+       # Get the current IAM policy with ETag
         gcloud run services get-iam-policy crn-visitor-connect-prod-as1-node-admin \
           --region=asia-south2 --format=json > current_policy.json
 
