@@ -5,7 +5,8 @@ metadata:
   labels:
     cloud.googleapis.com/location: asia-south2
   annotations:
-    run.googleapis.com/ingress: internal-and-cloud-load-balancing 
+    run.googleapis.com/ingress: internal-and-cloud-load-balancing
+    run.googleapis.com/allow_unauthenticated: "true"
 spec:
   template:
     metadata:
