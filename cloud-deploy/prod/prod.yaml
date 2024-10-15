@@ -3,20 +3,20 @@ kind: Service
 metadata:
   name: crn-visitor-connect-prod-as1-node-admin
   labels:
-    cloud.googleapis.com/location: asia-south1
+    cloud.googleapis.com/location: asia-south2
   annotations:
     run.googleapis.com/ingress: internal-and-cloud-load-balancing
 spec:
   template:
     metadata:
       annotations:
-        run.googleapis.com/network-interfaces: '[{"network":"vpc-visitor-connect-prod-goa-01","subnetwork":"sb-prod-as1-cr-02"}]'
+        run.googleapis.com/network-interfaces: '[{"network":"vpc-visitor-connect-prod-goa-01","subnetwork":"sb-prod-as2-cr-05"}]'
         run.googleapis.com/vpc-access-egress: private-ranges-only
         run.googleapis.com/allow_unauthenticated: "true"
         autoscaling.knative.dev/maxScale: "1"
     spec:
       containers:
-      - image: asia-south1-docker.pkg.dev/prj-visitor-connect-prod-goa/repo-visitor-connect-prod-as1-01/node-app:latest
+      - image: asia-south2-docker.pkg.dev/prj-visitor-connect-prod-goa/repo-visitor-connect-prod-as2-01/node-app:latest
         ports:
         - containerPort: 80
         resources:
