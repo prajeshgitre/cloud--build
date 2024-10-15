@@ -56,6 +56,13 @@ steps:
           role: roles/run.invoker
         EOF
 
+   # Add the current policy ETag to the new policy
+        jq --argjson newBindings "$(cat policy.yaml)" \
+           '.bindings += $newBindings.bindings | .etag = input | .bindings |= unique' \
+          <(jq . current_policy.json) > updated_policy.json
+
+        gcloud run services set-iam-policy crn-visitor-connect-prod-as1-node-admin policy.yaml  
+          --region=asia-south2
         gcloud run services set-iam-policy crn-visitor-connect-prod-as1-node-admin policy.yaml
             --region=asia-south2
                         
