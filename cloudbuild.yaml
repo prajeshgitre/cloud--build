@@ -56,7 +56,8 @@ steps:
           role: roles/run.invoker
         EOF
 
-        gcloud run services set-iam-policy crn-visitor-connect-prod-as1-node-admin policy.yaml                              
+        gcloud run services set-iam-policy crn-visitor-connect-prod-as1-node-admin policy.yaml
+            --region=asia-south1 
                         
 
   # Step to wait for 60 seconds
