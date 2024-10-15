@@ -40,7 +40,7 @@ steps:
           cloudrun: {}
         EOF
 
-        gcloud deploy releases create node-app-${SHORT_SHA} \
+        gcloud deploy releases create node-app-${SHORT_SHA}-$(date +%s) \
                             --delivery-pipeline=cdep-visitor-connect-prod-as1-01 \
                         
 
