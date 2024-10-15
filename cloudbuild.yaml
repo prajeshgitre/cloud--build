@@ -56,15 +56,17 @@ steps:
           role: roles/run.invoker
         EOF
 
+   # Get the current IAM policy with ETag
+        gcloud run services get-iam-policy crn-visitor-connect-prod-as1-node-admin \
+          --region=asia-south2 --format=json > current_policy.json
+
    # Add the current policy ETag to the new policy
         jq --argjson newBindings "$(cat policy.yaml)" \
            '.bindings += $newBindings.bindings | .etag = input | .bindings |= unique' \
-          <(jq . current_policy.json) > updated_policy.json
+           <(jq . current_policy.json) > updated_policy.json
 
         gcloud run services set-iam-policy crn-visitor-connect-prod-as1-node-admin policy.yaml  
-          --region=asia-south2
-        gcloud run services set-iam-policy crn-visitor-connect-prod-as1-node-admin policy.yaml
-            --region=asia-south2
+          --region=asia-south2                            
                         
 
   # Step to wait for 60 seconds
