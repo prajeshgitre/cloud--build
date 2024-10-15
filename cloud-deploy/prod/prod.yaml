@@ -6,13 +6,13 @@ metadata:
     cloud.googleapis.com/location: asia-south2
   annotations:
     run.googleapis.com/ingress: internal-and-cloud-load-balancing
-    run.googleapis.com/allow_unauthenticated: "true"
 spec:
   template:
     metadata:
       annotations:
         run.googleapis.com/network-interfaces: '[{"network":"vpc-visitor-connect-prod-goa-01","subnetwork":"sb-prod-as2-cr-04"}]'
         run.googleapis.com/vpc-access-egress: private-ranges-only
+        run.googleapis.com/allow_unauthenticated: "true"
         autoscaling.knative.dev/maxScale: "1"
     spec:
       containers:
