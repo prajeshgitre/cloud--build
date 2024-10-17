@@ -86,7 +86,7 @@ steps:
         # Check the status code and take action
         if [ "$response" -eq 200 ]; then
           echo "Deployment successful! Service is healthy."
-        if [ "$response" -ne 200 ]; then
+        elif [ "$response" -ne 200 ]; then
           echo "Deployment failed with status 500! Rolling back..."
 
           last_release=$(gcloud deploy releases list \
